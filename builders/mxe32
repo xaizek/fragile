@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "I'm a MXE-32 build script."
+echo "FRAGILE_REPO = $FRAGILE_REPO"
+sleep 2

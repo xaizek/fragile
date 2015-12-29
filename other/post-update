@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This is an example git post-update hook to trigger builders.
+
+# Assumes that deamon part of the fragile is located in parent directory of the
+# repository.
+
+for ref; do
+    php ../new.php "$(git rev-parse --short $ref)"
+done

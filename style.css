@@ -1,0 +1,124 @@
+h3
+{
+    text-align: center;
+}
+
+header, footer
+{
+    background-color: #C7364E;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 2px;
+    font-size: 14pt;
+    color: white;
+}
+
+header
+{
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+footer
+{
+    margin-top: 25px;
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+table
+{
+    margin: 1em auto;
+}
+
+tr, td
+{
+    padding: 2px 4px;
+}
+
+pre
+{
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-bottom: -15px;
+    margin-top: -15px;
+    white-space: pre-wrap;
+}
+
+span.menu
+{
+    margin-left: -5px;
+    margin-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
+}
+
+span.menu:hover
+{
+    background-color: #A62D41;
+}
+
+span.menu a, span.menu a:hover, span.title a, span.title a:hover, footer a
+{
+    color: white;
+    text-decoration: none;
+}
+
+span.title
+{
+    float: right;
+}
+
+.build_absent a, .build_pending a, .build_running a, .build_success a,
+.build_failure a
+{
+    color: white;
+    display: block;
+    text-decoration: none;
+}
+
+.build_absent, .build_pending, .build_running, .build_success, .build_failure
+{
+    width: 20ex;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-family: Sans-Serif;
+    letter-spacing: 2px;
+}
+
+.build_absent
+{
+    background-color: white;
+    color: black;
+}
+
+.build_pending
+{
+    background-color: #0F6785;
+}
+
+.build_running
+{
+    background-color: #40ADAC;
+}
+
+.build_success
+{
+    background-color: #71D964;
+}
+
+.build_failure
+{
+    background-color: #F03E41;
+}
+
+.revision
+{
+    text-align: center;
+    font-family: Monospace;
+    font-size: 130%;
+}

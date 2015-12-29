@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]; then
+    echo "Usage: $(basename $0) web-path daemon-path"
+    exit 1
+fi
+
+web_path="$1"
+daemon_path="$2"
+
+set -e
+
+mkdir -p "$web_path" "$daemon_path"
+
+cp .htaccess \
+   build.php config.php dashboard.php db.php footer.php header.php \
+   style.css favicon.png \
+   "$web_path"
+
+cp config.php daemon.php db.php new.php "$daemon_path"
+
+mkdir -p "$daemon_path/builders"

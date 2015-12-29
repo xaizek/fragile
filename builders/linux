@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo 'if [ ! -f config.status ]; then'
+echo '    "$FRAGILE_REPO/configure"'
+echo 'fi'
+echo 'make -j5'
+echo 'make check'
+
+sleep 3

@@ -1,0 +1,36 @@
+<?php
+
+// name of the project checked by this CI instance
+const PROJECT_NAME = '';
+
+// URL of the project checked by this CI instance
+const PROJECT_URL = '';
+
+// database connection string
+const DB_DSN = '';
+
+// path to directory containing builder-scripts
+const BUILDERS_PATH = '';
+
+// number of second to sleep before repeated checks for new tasks
+const DAEMON_TIMEOUT = 10;
+
+// web-path prefix
+const WEB_ROOT = '';
+
+// URL of repository to get data from (source of a checkout)
+const REPO_URL = '';
+
+// path to repository check out directory
+const REPO_PATH = '';
+
+// path to root directory for per-builder build directory
+const BUILDS_PATH = '';
+
+// how many revisions to display on the dashboard
+const REVISIONS_LIMIT = 4;
+
+// link to sources of the project (update if you modify them)
+const CI_URL = 'https://github.com/xaizek/fragile';
+
+?>
