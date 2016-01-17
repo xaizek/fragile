@@ -13,113 +13,82 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once 'header.php';
+require_once __DIR__ . '/classes/Builds.php';
+require_once __DIR__ . '/classes/Buildsets.php';
+require_once __DIR__ . '/config.php';
 
-require_once 'config.php';
-require_once 'db.php';
+require_once __DIR__ . '/header.php';
 
 try {
-    display_dashboard();
+    displayDashboard();
 } catch (PDOException $e) {
     print "<h3>No Database</h3>\n";
 }
 
-require_once 'footer.php';
+require_once __DIR__ . '/footer.php';
 
-function display_dashboard()
+/**
+ * @brief Displays dashboard of builds <-> buildsets.
+ */
+function displayDashboard()
 {
-    $sql = 'SELECT buildsetid, revision FROM buildsets '
-         . 'ORDER BY buildsetid DESC LIMIT ' . REVISIONS_LIMIT;
-    $statement = DB::query($sql);
-    if (!$statement) {
-        die("Failed to list buildsets from the database\n"
-          . print_r(DB::errorInfo(), true));
+    $buildsets = Buildsets::getLastN(REVISIONS_LIMIT);
+    $builds = Builds::getBuildsForAll($buildsets);
+
+    $builders = [];
+    foreach ($builds as $build) {
+        $builders[$build->buildername][$build->buildset] = $build;
     }
 
-    $buildsetsinfo = $statement->fetchAll();
-
-    // fetch all builds for the buildset
-
-    $buildersinfo = [];
-
-    if (sizeof($buildsetsinfo) != 0) {
-        $sql = 'SELECT buildset, buildername, status FROM builds WHERE buildset='
-             . join(' OR buildset=', array_map('question', $buildsetsinfo));
-        $statement = DB::prepare($sql);
-        if (!$statement ||
-            !$statement->execute(array_map('get_builsetid', $buildsetsinfo))) {
-            die("Failed to list builds\n"
-              . print_r(DB::errorInfo(), true));
-        }
-
-        $buildersinfo = $statement->fetchAll();
-        if ($buildersinfo === false) {
-            die("Failed to fetch builds\n");
-        }
-    }
-
-    $table = [];
-    foreach ($buildersinfo as $row) {
-        $table[$row['buildername']][$row['buildset']] = $row;
-    }
-
-    if (sizeof($table) == 0) {
+    if (sizeof($builders) == 0) {
         print "<h3>No Builds</h3>\n";
     } else {
-        print_build_table($buildsetsinfo, $table);
+        printBuildTable($buildsets, $builders);
     }
 }
 
-function question($x)
-{
-    return '?';
-}
-
-function get_builsetid($x)
-{
-    return $x['buildsetid'];
-}
-
-function print_build_table($buildsetsinfo, $table)
+/**
+ * @brief Prints build table.
+ *
+ * @param buildsets Array of buildsets to display.
+ * @param builders Array of builders (arrays of builds per buildset).
+ */
+function printBuildTable($buildsets, $builders)
 {
     // sort builders by their name
-    ksort($table);
+    ksort($builders);
 
     // output table header
     print '<table><tr><td></td>' . "\n";
-    foreach ($buildsetsinfo as $row) {
+    foreach ($buildsets as $buildset) {
         print "<td class='revision'>";
-        print '#' . htmlentities($row['buildsetid']) . ': ';
-        print htmlentities($row['revision']);
+        print '#' . htmlentities($buildset->buildsetid) . ': ';
+        print htmlentities($buildset->revision);
         print "</td>\n";
     }
 
-    // for each builder:
-    foreach ($table as $buildername => $builderinfo) {
+    foreach ($builders as $buildername => $builderinfo) {
         print "<tr>\n";
         print '<td>' . htmlentities($buildername) . "</td>\n";
-        // for each revision:
-        foreach ($buildsetsinfo as $buildsetinfo) {
-            // output status
-
-            $buildsetid = $buildsetinfo['buildsetid'];
+        foreach ($buildsets as $buildset) {
+            $buildsetid = $buildset->buildsetid;
             if (array_key_exists($buildsetid, $builderinfo)) {
-                $status = $builderinfo[$buildsetid]['status'];
+                $status = $builderinfo[$buildsetid]->status;
             } else {
                 $status = '-';
             }
 
-            if (status_has_output($status)) {
+            if (statusHasOutput($status)) {
                 // FIXME: might need some kind of escaping here
                 $build_url = htmlEntities(WEB_ROOT
-                                        . "/builds/$buildername/$buildsetid",
+                                        . "/builds/$buildsetid/$buildername",
                                           ENT_QUOTES);
                 $cell = "<a href='$build_url'>$status</a>";
             } else {
                 $cell = $status;
             }
 
-            $class = class_from_status($status);
+            $class = classFromStatus($status);
             print "<td class='$class'>$cell</td>\n";
         }
         print "</tr>\n";
@@ -128,7 +97,14 @@ function print_build_table($buildsetsinfo, $table)
     print "</table>\n";
 }
 
-function status_has_output($status)
+/**
+ * @brief Checks whether particular status has associated output.
+ *
+ * @param status Status string.
+ *
+ * @returns @c true if so, otherwise @c false.
+ */
+function statusHasOutput($status)
 {
     switch ($status) {
         case 'OK':
@@ -140,7 +116,14 @@ function status_has_output($status)
     }
 }
 
-function class_from_status($status)
+/**
+ * @brief Retrieves CSS style class that corresponds to a given status.
+ *
+ * @param status Status string.
+ *
+ * @returns Name of the style as a string.
+ */
+function classFromStatus($status)
 {
     switch ($status) {
         case '-':       return 'build_absent';
@@ -148,6 +131,7 @@ function class_from_status($status)
         case 'running': return 'build_running';
         case 'OK':      return 'build_success';
         case 'FAIL':    return 'build_failure';
+        case 'ERROR':   return 'build_error';
     }
 }
 

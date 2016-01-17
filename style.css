@@ -71,14 +71,15 @@ span.title
 }
 
 .build_absent a, .build_pending a, .build_running a, .build_success a,
-.build_failure a
+.build_failure a, .build_error a
 {
     color: white;
     display: block;
     text-decoration: none;
 }
 
-.build_absent, .build_pending, .build_running, .build_success, .build_failure
+.build_absent, .build_pending, .build_running, .build_success, .build_failure,
+.build_error
 {
     width: 20ex;
     text-align: center;
@@ -114,6 +115,11 @@ span.title
 .build_failure
 {
     background-color: #F03E41;
+}
+
+.build_error
+{
+    background-color: red;
 }
 
 .revision

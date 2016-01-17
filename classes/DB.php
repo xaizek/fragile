@@ -13,19 +13,42 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once 'config.php';
+require_once __DIR__ . '/../config.php';
 
+/**
+ * @brief Wrapper for accessing database.
+ */
 class DB
 {
-    // Creates new database connection if one doesn't exist.  Private so noone
-    // can create new instance via ` = new DB();`.
+    /**
+     * @brief Creates new database connection if one doesn't exist.
+     *
+     * Private so noone can create new instance via ` = new DB();`.
+     */
     private function __construct() {}
 
-    // Private so nobody can clone the instance.
-    private function __clone() {}
+    /**
+     * @brief Passes on any static calls onto the singleton PDO instance.
+     *
+     * @param method Method name.
+     * @param args List of arguments.
+     *
+     * @returns Whatever that PDO method returns.
+     */
+    final public static function __callStatic($method, $args) {
+        $objInstance = self::getInstance();
 
-    // Retrieves existing DB instance or creates initial connection.
-    public static function getInstance() {
+        return call_user_func_array([$objInstance, $method], $args);
+    }
+
+    /**
+     * @brief Retrieves existing DB instance or creates initial connection.
+     *
+     * Also creates required tables if they don't exist.
+     *
+     * @returns DB instance.
+     */
+    private static function getInstance() {
         if (!self::$objInstance) {
             self::$objInstance = new PDO(DB_DSN);
             self::$objInstance->setAttribute(PDO::ATTR_ERRMODE,
@@ -55,13 +78,9 @@ EOS
         return self::$objInstance;
     }
 
-    // Passes on any static calls to this class onto the singleton PDO instance.
-    final public static function __callStatic($chrMethod, $arrArguments) {
-        $objInstance = self::getInstance();
-
-        return call_user_func_array([$objInstance, $chrMethod], $arrArguments);
-    }
-
+    /**
+     * @brief Singleton instance of the DB classs.
+     */
     private static $objInstance;
 }
 

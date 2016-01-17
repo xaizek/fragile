@@ -15,7 +15,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <?php
 
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 
 print "<html><head>\n";
 

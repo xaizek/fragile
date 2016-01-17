@@ -13,10 +13,12 @@ set -e
 mkdir -p "$web_path" "$daemon_path"
 
 cp .htaccess \
-   build.php config.php dashboard.php db.php footer.php header.php \
+   build.php config.php dashboard.php footer.php header.php \
    style.css favicon.png \
    "$web_path"
+cp -r classes/ "$web_path"
 
-cp config.php daemon.php db.php new.php "$daemon_path"
+cp config.php daemon.php new.php "$daemon_path"
+cp -r classes/ "$daemon_path"
 
 mkdir -p "$daemon_path/builders"
