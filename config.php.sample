@@ -7,24 +7,29 @@ const PROJECT_NAME = '';
 const PROJECT_URL = '';
 
 // database connection string
+// example: 'sqlite:/var/fragile/data.sqlite'
 const DB_DSN = '';
 
 // path to directory containing builder-scripts
+// example: '/var/fragile/builders'
 const BUILDERS_PATH = '';
 
 // number of second to sleep before repeated checks for new tasks
 const DAEMON_TIMEOUT = 10;
 
 // web-path prefix
+// example: '/fragile'
 const WEB_ROOT = '';
 
 // URL of repository to get data from (source of a checkout)
 const REPO_URL = '';
 
 // path to repository check out directory
+// example: '/var/fragile/repo'
 const REPO_PATH = '';
 
 // path to root directory for per-builder build directory
+// example: '/var/fragile/buildbox'
 const BUILDS_PATH = '';
 
 // how many revisions to display on the dashboard
