@@ -16,15 +16,16 @@
 require_once __DIR__ . '/classes/Build.php';
 require_once __DIR__ . '/classes/Buildset.php';
 
-// TODO: maybe accept second argument which would specify builder or branch name
-if (sizeof($argv) != 2) {
-    print "Usage: ${argv[0]} revision\n";
+// TODO: maybe allow specifying list of builders
+if (sizeof($argv) != 3) {
+    print "Usage: ${argv[0]} name revision\n";
     die("Wrong invocation\n");
 }
 
-$revision = $argv[1];
+$name = $argv[1];
+$revision = $argv[2];
 
-$buildset = Buildset::create($revision);
+$buildset = Buildset::create($name, $revision);
 
 $builders = [];
 

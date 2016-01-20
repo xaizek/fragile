@@ -128,3 +128,10 @@ span.title
     font-family: Monospace;
     font-size: 130%;
 }
+
+.name
+{
+    white-space: nowrap;
+    font-size: 0.85em;
+    font-weight: bold;
+}

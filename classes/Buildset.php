@@ -23,33 +23,36 @@ class Buildset
     /**
      * @brief Creates new buildset.
      *
+     * @param name Symbolic name of the build (e.g. branch name).
      * @param revision Revision to use for the new buildset.
      *
      * @returns Buildset object.
      */
-    public static function create($revision)
+    public static function create($name, $revision)
     {
-        $sql = 'INSERT INTO buildsets(revision) VALUES(?)';
+        $sql = 'INSERT INTO buildsets(name, revision) VALUES(?, ?)';
         $statement = DB::prepare($sql);
-        if (!$statement || $statement->execute([$revision]) === false) {
+        if (!$statement || $statement->execute([$name, $revision]) === false) {
             die("Failed to schedule buildset\n"
               . print_r(DB::errorInfo(), true));
         }
 
         $buildsetid = DB::lastInsertId();
 
-        return new Buildset($buildsetid, $revision);
+        return new Buildset($buildsetid, $name, $revision);
     }
 
     /**
      * @brief Constructs buildsets from specified information.
      *
      * @param buildsetid Buildset ID.
+     * @param name Symbolic name of the build (e.g. branch name).
      * @param revision Associated VCS revision.
      */
-    public function __construct($buildsetid, $revision)
+    public function __construct($buildsetid, $name, $revision)
     {
         $this->buildsetid = $buildsetid;
+        $this->name = $name;
         $this->revision = $revision;
     }
 
@@ -57,6 +60,11 @@ class Buildset
      * @brief Unique buildset ID.
      */
     public $buildsetid;
+
+    /**
+     * @brief Symbolic name of the build (e.g. branch name).
+     */
+    public $name;
 
     /**
      * @brief VCS revision to use for all builds that belong to the buildset.

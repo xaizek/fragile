@@ -56,6 +56,7 @@ class DB
             self::$objInstance->exec(<<<EOS
                 CREATE TABLE IF NOT EXISTS buildsets (
                     buildsetid INTEGER,
+                    name TEXT NOT NULL,
                     revision TEXT NOT NULL,
 
                     PRIMARY KEY (buildsetid)

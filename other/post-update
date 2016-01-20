@@ -6,5 +6,5 @@
 # repository.
 
 for ref; do
-    php ../new.php "$(git rev-parse --short $ref)"
+    php ../new.php "${ref#*/*/}" "$(git rev-parse --short $ref)"
 done

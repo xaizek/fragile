@@ -64,6 +64,9 @@ function printBuildTable($buildsets, $builders)
         print "<td class='revision'>";
         print '#' . htmlentities($buildset->buildsetid) . ': ';
         print htmlentities($buildset->revision);
+        print "<br/><span class='name'>"
+            . htmlentities($buildset->name)
+            . '</span>';
         print "</td>\n";
     }
 
