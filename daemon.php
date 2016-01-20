@@ -18,16 +18,10 @@ require_once __DIR__ . '/config.php';
 
 // TODO: maybe mark all "running" builds as failed
 
-// TODO: get rid of hard-coded git commands by using scripts
+// TODO: maybe extract Builders and Builder classes
 
 if (!putenv('FRAGILE_REPO=' . REPO_PATH)) {
     die("Failed to set FRAGILE_REPO environment variable\n");
-}
-if (!putenv('GIT_WORK_TREE=' . REPO_PATH)) {
-    die("Failed to set GIT_WORK_TREE environment variable\n");
-}
-if (!putenv('GIT_DIR=' . REPO_PATH . '/.git')) {
-    die("Failed to set GIT_DIR environment variable\n");
 }
 
 prepareRepository();
@@ -42,7 +36,7 @@ function prepareRepository()
         return;
     }
 
-    system('git clone ' . REPO_URL . ' ' . REPO_PATH, $retval);
+    system(__DIR__ . "/vcs/clone '" . REPO_URL . "'", $retval);
     if ($retval != 0) {
         delTree(REPO_PATH);
         die("Failed to clone repository\n");
@@ -85,13 +79,7 @@ function runBuilds()
 
     foreach ($builds as $build) {
         // checkout revision
-        system('git remote update', $retval);
-        if ($retval != 0) {
-            $build->setStatus('ERROR');
-            print "Failed to update repository\n";
-            continue;
-        }
-        system('git checkout ' . $build->revision, $retval);
+        system(__DIR__ . "/vcs/checkout '" . $build->revision . "'", $retval);
         if ($retval != 0) {
             $build->setStatus('ERROR');
             print "Failed to checkout revision\n";

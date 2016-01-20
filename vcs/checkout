@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $(basename $0) revision"
+    exit 1
+fi
+
+revision="$1"
+
+export GIT_WORK_TREE="$FRAGILE_REPO"
+export GIT_DIR="$FRAGILE_REPO/.git"
+
+git remote update
+git checkout "$revision"

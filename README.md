@@ -14,8 +14,8 @@ tried really hard to omit creating one more).
 
 * PHP
 * SQLite
-* Git
 * Unix-like system with bash
+* Git (by default, but can be changed by editing `vcs/*`)
 
 ### License ###
 

@@ -16,9 +16,9 @@ cp .htaccess \
    build.php config.php dashboard.php footer.php header.php \
    style.css favicon.png \
    "$web_path"
-cp -r classes/ "$web_path"
+cp -r classes/ vcs/ "$web_path"
 
 cp config.php daemon.php new.php "$daemon_path"
-cp -r classes/ "$daemon_path"
+cp -r classes/ vcs/ "$daemon_path"
 
 mkdir -p "$daemon_path/builders"
