@@ -13,6 +13,18 @@ header, footer
     color: white;
 }
 
+hr
+{
+    color: #C7364E;
+    background-color: #C7364E;
+    border: 0;
+    height: 5px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 header
 {
     margin-top: 10px;
@@ -26,9 +38,15 @@ footer
     text-align: right;
 }
 
-table
+table.dashboard
 {
     margin: 1em auto;
+}
+
+table.buildinfo
+{
+    border-spacing: 10px;
+    margin-top: -15px;
 }
 
 tr, td
@@ -36,12 +54,17 @@ tr, td
     padding: 2px 4px;
 }
 
+td.title
+{
+    font-weight: bold;
+    text-align: right;
+}
+
 pre
 {
     padding-left: 3px;
     padding-right: 3px;
     margin-bottom: -15px;
-    margin-top: -15px;
     white-space: pre-wrap;
 }
 

@@ -43,6 +43,28 @@ class Buildset
     }
 
     /**
+     * @brief Retrieves existing buildset.
+     *
+     * @param buildsetid Buildset ID.
+     *
+     * @returns Buildset object or @c null if there is no such buildset.
+     */
+    public static function get($buildsetid)
+    {
+        $sql = 'SELECT name, revision FROM buildsets WHERE buildsetid = ?';
+        $statement = DB::prepare($sql);
+        if (!$statement
+            || $statement->execute([$buildsetid]) !== true
+            || ($buildsetinfo = $statement->fetch()) === false) {
+            return null;
+        }
+
+        return new Buildset($buildsetid,
+                            $buildsetinfo['name'],
+                            $buildsetinfo['revision']);
+    }
+
+    /**
      * @brief Constructs buildsets from specified information.
      *
      * @param buildsetid Buildset ID.

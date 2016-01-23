@@ -59,7 +59,7 @@ function printBuildTable($buildsets, $builders)
     ksort($builders);
 
     // output table header
-    print '<table><tr><td></td>' . "\n";
+    print '<table class="dashboard"><tr><td></td>' . "\n";
     foreach ($buildsets as $buildset) {
         print "<td class='revision'>";
         print '#' . htmlentities($buildset->buildsetid) . ': ';
