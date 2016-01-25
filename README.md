@@ -1,7 +1,7 @@
 _fragile_
 _2015 - 2016_
 
-**Last updated**: 20 January, 2016
+**Last updated**: 25 January, 2016
 **Version**: 0.2
 
 ### Brief Description ###
@@ -16,6 +16,10 @@ tried really hard to omit creating one more).
 * SQLite
 * Unix-like system with bash
 * Git (by default, but can be changed by editing `vcs/*`)
+
+### Screenshot ###
+
+![Dashboard](other/fragile.png)
 
 ### Demo ###
 
