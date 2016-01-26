@@ -42,6 +42,8 @@ try {
         print "<td>" . htmlentities($buildset->name) . "</td>\n";
         print "<td class='title'>Result:</td>\n";
         print "<td>" . htmlentities($build->status) . "</td>\n";
+        print "<td class='title'>Exit code:</td>\n";
+        print "<td>" . htmlentities($build->exitcode) . "</td>\n";
         print "</tr></table>\n";
 
         print "<hr/>\n";

@@ -67,6 +67,7 @@ class DB
                     buildername TEXT NOT NULL,
                     output TEXT NOT NULL,
                     status TEXT NOT NULL,
+                    exitcode INTEGER,
 
                     PRIMARY KEY (buildset, buildername),
                     FOREIGN KEY (buildset) REFERENCES buildsets(buildsetid)

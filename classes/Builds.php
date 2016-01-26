@@ -35,7 +35,8 @@ class Builds
      */
     public static function getBuildsForAll($buildsets)
     {
-        $sql = 'SELECT buildset, buildername, status FROM builds WHERE buildset='
+        $sql = 'SELECT buildset, buildername, status, exitcode FROM builds '
+             . 'WHERE buildset='
              . join(' OR buildset=',
                     array_map('Builds::getPlaceholder', $buildsets));
         return self::getBuilds($sql,
@@ -49,7 +50,7 @@ class Builds
      */
     public static function getPendingBuilds()
     {
-        $sql = 'SELECT buildset, buildername, status, revision '
+        $sql = 'SELECT buildset, buildername, status, exitcode, revision '
              . 'FROM builds, buildsets '
              . 'WHERE status = "pending" '
              . '  AND builds.buildset = buildsets.buildsetid '
@@ -87,6 +88,7 @@ class Builds
                        new Build($buildinfo['buildset'],
                                  $buildinfo['buildername'],
                                  $buildinfo['status'],
+                                 $buildinfo['exitcode'],
                                  $revision));
         }
 

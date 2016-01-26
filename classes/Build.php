@@ -26,14 +26,16 @@ class Build
      * @param buildset Buildset ID.
      * @param buildername Name of builder to use.
      * @param status Status string of the build.
+     * @param exitcode Exit code of the run.
      * @param revision Revision of the associated buildset.
      */
-    public function __construct($buildset, $buildername, $status,
+    public function __construct($buildset, $buildername, $status, $exitcode,
                                 $revision = null)
     {
         $this->buildset = $buildset;
         $this->buildername = $buildername;
         $this->status = $status;
+        $this->exitcode = $exitcode;
         $this->revision = $revision;
     }
 
@@ -47,7 +49,7 @@ class Build
      */
     public static function get($buildset, $buildername)
     {
-        $sql = 'SELECT buildset, buildername, status FROM builds '
+        $sql = 'SELECT buildset, buildername, status, exitcode FROM builds '
              . 'WHERE buildset = ? AND buildername = ?';
         $statement = DB::prepare($sql);
         if (!$statement
@@ -58,7 +60,8 @@ class Build
 
         return new Build($buildinfo['buildset'],
                          $buildinfo['buildername'],
-                         $buildinfo['status']);
+                         $buildinfo['status'],
+                         $buildinfo['exitcode']);
     }
 
     /**
@@ -69,8 +72,9 @@ class Build
      */
     public static function create($buildset, $buildername)
     {
-        $sql = 'INSERT INTO builds(buildset, buildername, output, status) '
-             . 'VALUES(?, ?, "", "pending")';
+        $sql = 'INSERT INTO '
+             . 'builds(buildset, buildername, output, status, exitcode) '
+             . 'VALUES(?, ?, "", "pending", -1)';
         $statement = DB::prepare($sql);
         if (!$statement || $statement->execute([$buildset->buildsetid,
                                                 $buildername]) === false) {
@@ -132,13 +136,13 @@ class Build
      * @param status New status string.
      * @param output Multiline build output.
      */
-    public function setResult($status, $output)
+    public function setResult($status, $output, $exitcode)
     {
-        $sql = 'UPDATE builds SET status = ?, output = ? '
+        $sql = 'UPDATE builds SET status = ?, output = ?, exitcode = ? '
              . 'WHERE buildset = ? AND buildername = ?';
         $statement = DB::prepare($sql);
         if (!$statement ||
-            $statement->execute([$status, $output, $this->buildset,
+            $statement->execute([$status, $output, $exitcode, $this->buildset,
                                  $this->buildername]) === false) {
             die("Failed to set build status to 'running'\n"
               . print_r(DB::errorInfo(), true));
@@ -161,6 +165,11 @@ class Build
      * @brief Status string.
      */
     public $status;
+
+    /**
+     * @brief Exit code of the run (-1 if builder wasn't run).
+     */
+    public $exitcode;
 
     /**
      * @brief Revision string, which might be @c null (depends on construction).

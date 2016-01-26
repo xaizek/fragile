@@ -115,8 +115,7 @@ function runBuild($build)
     }
     $exitcode = pclose($handle);
 
-    // TODO: store exitcode in the database
-    $build->setResult(($exitcode == 0) ? 'OK' : 'FAIL', $output);
+    $build->setResult(($exitcode == 0) ? 'OK' : 'FAIL', $output, $exitcode);
 }
 
 /**
