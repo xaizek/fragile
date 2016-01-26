@@ -1,8 +1,8 @@
 _fragile_
 _2015 - 2016_
 
-**Last updated**: 25 January, 2016
-**Version**: 0.2
+**Last updated**: 26 January, 2016
+**Version**: 0.3
 
 ### Brief Description ###
 
