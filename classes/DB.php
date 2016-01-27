@@ -65,7 +65,7 @@ class DB
                 CREATE TABLE IF NOT EXISTS builds (
                     buildset INTEGER,
                     buildername TEXT NOT NULL,
-                    output TEXT NOT NULL,
+                    output BLOB NOT NULL,
                     status TEXT NOT NULL,
                     exitcode INTEGER,
 

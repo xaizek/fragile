@@ -107,7 +107,7 @@ class Build
               . print_r(DB::errorInfo(), true));
         }
 
-        return $buildinfo['output'];
+        return gzinflate($buildinfo['output']);
     }
 
     /**
@@ -138,6 +138,11 @@ class Build
      */
     public function setResult($status, $output, $exitcode)
     {
+        $output = gzdeflate($output, 9);
+        if ($output === false) {
+            die("Failed to compress output.");
+        }
+
         $sql = 'UPDATE builds SET status = ?, output = ?, exitcode = ? '
              . 'WHERE buildset = ? AND buildername = ?';
         $statement = DB::prepare($sql);
