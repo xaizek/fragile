@@ -33,11 +33,11 @@ try {
     } else {
         print "<table class='buildinfo'><tr>\n";
         print "<td class='title'>Buildset:</td>\n";
-        print "<td>#" .  htmlentities($buildset->buildsetid) . "</td>\n";
+        print "<td>#" . htmlentities($buildset->buildsetid) . "</td>\n";
         print "<td class='title'>Builder:</td>\n";
-        print "<td>#" .  htmlentities($buildername) . "</td>\n";
+        print "<td>#" . htmlentities($buildername) . "</td>\n";
         print "<td class='title'>Revision:</td>\n";
-        print "<td>" . htmlentities($buildset->revision).  "</td>\n";
+        print "<td>" . htmlentities($buildset->revision). "</td>\n";
         print "<td class='title'>Ref:</td>\n";
         print "<td>" . htmlentities($buildset->name) . "</td>\n";
         print "<td class='title'>Result:</td>\n";
