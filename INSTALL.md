@@ -1,4 +1,4 @@
-### Structure ###
+## Structure ##
 
 There are two parts of the application:
  * web-interface
@@ -50,3 +50,8 @@ Example of init-script for `/etc/init.d/` is at `other/rc.fragile`.
 One way to do this is to create bare repository for pushes.  Assuming that the
 repository is where daemon gets installed, just copy `other/post-update` to
 hooks (this is for Git, other VCSs might differ).
+
+### Updates ###
+
+Don't forget to remove database before an update to address possible changes of
+tables.
