@@ -2,7 +2,13 @@
 
 echo "I'm a MXE-32 build script."
 echo "FRAGILE_REPO = $FRAGILE_REPO"
+
+echo "WARNING: oups"
+
 sleep 2
 
 # fail randomly
-[ $(( RANDOM % 2 )) == 0 ]
+if ! [ $(( RANDOM % 2 )) == 0 ]; then
+    echo "error: something went wrong"
+    exit 1
+fi

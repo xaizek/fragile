@@ -2,4 +2,12 @@
 
 echo "I'm a MXE-64 build script."
 echo "FRAGILE_REPO = $FRAGILE_REPO"
-sleep 10
+for i in {1..100}; do
+    echo Working...
+done
+sleep 5
+echo Warning: attention
+for i in {1..100}; do
+    echo Working...
+done
+echo Warning: something happened
