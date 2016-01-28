@@ -158,3 +158,51 @@ span.title
     font-size: 0.85em;
     font-weight: bold;
 }
+
+pre span.error-title
+{
+    color: white;
+    background-color: red;
+    font-weight: bold;
+    padding: 1px;
+}
+
+pre span.error-msg
+{
+    color: red;
+    font-weight: bold;
+}
+
+pre span.warning-title
+{
+    color: black;
+    background-color: yellow;
+    font-weight: bold;
+    padding: 1px;
+}
+
+pre span.warning-msg
+{
+    font-weight: bold;
+}
+
+div.buildreport
+{
+    margin-left: 15px;
+}
+
+div.buildreport a, div.buildreport a:hover
+{
+    color: black;
+}
+
+div.buildreport a:hover
+{
+    color: #555;
+}
+
+div ol
+{
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

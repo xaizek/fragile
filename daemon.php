@@ -102,7 +102,7 @@ function runBuild($build)
 
     $build->setStatus('running');
 
-    $output = '';
+    $rawOutput = '';
 
     $buildPath = BUILDS_PATH . "/$build->buildername";
     createPath($buildPath);
@@ -110,11 +110,12 @@ function runBuild($build)
     $handle = popen("cd $buildPath && "
                   . BUILDERS_PATH . '/' . $build->buildername . ' 2>&1', 'r');
     while (!feof($handle)) {
-        $output .= fgets($handle);
+        $rawOutput .= fgets($handle);
         // TODO: append output to database record every N lines (e.g. 100)
     }
     $exitcode = pclose($handle);
 
+    $output = makeReport($rawOutput);
     $build->setResult(($exitcode == 0) ? 'OK' : 'FAIL', $output, $exitcode);
 }
 
@@ -135,6 +136,69 @@ function createPath($path)
         die("Failed to create directory: $path\n");
     }
     return true;
+}
+
+/**
+ * @brief Formats output to produce build report.
+ *
+ * Result consists of two parts separated by double newline symbol.  The first
+ * parts contains index of errors and warnings, the second one is formatted
+ * output.
+ *
+ * @param rawOutput Output from builder script as is.
+ *
+ * @returns Multiline build report.
+ */
+function makeReport($rawOutput)
+{
+    $errors = [];
+    $warnings = [];
+
+    $input = preg_split('/\n/', $rawOutput);
+    $output = [];
+    $msgnum = 1;
+    foreach ($input as $line) {
+        $re = '/^(.*)(error|warning|Error|Warning|ERROR|WARNING)(:\s+)(.*)$/';
+        preg_match($re, $line, $matches);
+        if (sizeof($matches) == 0) {
+            array_push($output, $line);
+            continue;
+        }
+
+        $anchor = "<a name='m$msgnum'/>";
+        $link = "<a href='#m$msgnum'>" . htmlentities($matches[4]) . "</a>";
+
+        if (strcasecmp($matches[2], 'error') == 0) {
+            array_push($errors, $link);
+            $style = 'error';
+        } else {
+            array_push($warnings, $link);
+            $style = 'warning';
+        }
+
+        $line = "$matches[1]"
+              . "<span class='$style-title'>$matches[2]</span>"
+              . "$matches[3]"
+              . "<span class='$style-msg'>$matches[4]</span>";
+
+        array_push($output, $anchor . $line);
+
+        ++$msgnum;
+    }
+
+    $header = '';
+    if (sizeof($errors) != 0) {
+        $header .= "Errors:<ol><li>";
+        $header .= join("</li><li>", $errors);
+        $header .= "</li></ol>\n";
+    }
+    if (sizeof($warnings) != 0) {
+        $header .= "Warnings:<ol><li>";
+        $header .= join("</li><li>", $warnings);
+        $header .= "</li></ol>\n";
+    }
+
+    return $header . "\n\n" . join("\n", $output);
 }
 
 ?>

@@ -48,8 +48,15 @@ try {
 
         print "<hr/>\n";
 
-        print "<pre>\n";
-        print $build->getOutput();
+        $rawOutput = $build->getOutput();
+        $parts = preg_split('/\n\n/', $rawOutput, 2);
+
+        if ($parts[0] != '') {
+            print "<div class='buildreport'>$parts[0]</div>";
+            print "<hr/>";
+        }
+        print "<pre>";
+        print $parts[1];
         print "</pre>\n";
     }
 } catch (PDOException $e) {
