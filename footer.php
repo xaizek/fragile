@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-print "<footer><a href='" . CI_URL . "'>fragile v0.3</a></footer>\n"
+print "<footer><a href='" . CI_URL . "'>fragile v0.4</a></footer>\n"
     . "</body></html>";
 
 ?>
