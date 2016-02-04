@@ -39,7 +39,7 @@ web-interface isolated from actual build process.
 
 ### Scheduling a build ###
 
-Run `new.php` passing it revision ID to work with.
+Run `new.php` passing it refname and revision ID (in this order) to work with.
 
 ### Installing the daemon ###
 
