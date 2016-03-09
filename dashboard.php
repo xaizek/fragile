@@ -112,6 +112,7 @@ function statusHasOutput($status)
     switch ($status) {
         case 'OK':
         case 'FAIL':
+        case 'ERROR':
             return true;
 
         default:
