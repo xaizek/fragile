@@ -15,6 +15,8 @@ Before installing files, copy `config.php.sample` to `config.php` and fill in
 all the values of according to comments there.  This file holds configuration of
 both web and daemon parts and should be kept in sync between the two parts.
 
+See `hooks/` directory and `README` file there for instructions on using hooks.
+
 ## Installation ##
 
 Run the `install` script to perform the installation:
@@ -36,6 +38,13 @@ build.  When script is run:
 
 Use dummy builders from `builders/` directory during setup to check
 web-interface isolated from actual build process.
+
+#### Conditional builders ####
+
+In addition to `<web-path>/builders` directory builders from
+`<web-path>/builders/<name>` (where `<name>` is branch name probably) are also
+scheduled, if that directory exists.  This can be used to run some builders only
+for specific branches.
 
 ### Scheduling a build ###
 

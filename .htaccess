@@ -1,4 +1,4 @@
 RewriteEngine On
 
 RewriteRule ^$ ./dashboard.php [L]
-RewriteRule ^builds/([^/]+)/([^/]+)/?$ ./build.php?buildset=$1&buildername=$2 [L]
+RewriteRule ^builds/([^/]+)/(.*[^/])/?$ ./build.php?buildset=$1&buildername=$2 [L]

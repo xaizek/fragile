@@ -27,18 +27,9 @@ $revision = $argv[2];
 
 $buildset = Buildset::create($name, $revision);
 
-$builders = [];
-
-if ($handle = opendir(BUILDERS_PATH)) {
-    while (($entry = readdir($handle)) !== false) {
-        if ($entry != '.' && $entry != '..') {
-            Build::create($buildset, $entry);
-            array_push($builders, $entry);
-        }
-    }
-
-    closedir($handle);
-}
+$builders = scheduleBuilders($buildset, BUILDERS_PATH, '');
+$builders = array_merge($builders,
+                        scheduleBuilders($buildset, BUILDERS_PATH, "$name/"));
 
 print "Buildset ID: $buildset->buildsetid\n";
 if (sizeof($builders) == 0) {
@@ -47,6 +38,34 @@ if (sizeof($builders) == 0) {
     print "Scheduled " . sizeof($builders) . " builder"
         . (sizeof($builders) == 1 ? '' : 's')
         . ": " . join(', ', $builders) . "\n";
+}
+
+/**
+ * @brief Schedules builders discovered in @p dir directory.
+ *
+ * @param buildset Parent buildset for newly created builds.
+ * @param dir Directory to look for builders.
+ * @param suffix Additional suffix for builders path (appended to @p dir).
+ *
+ * @returns Array of scheduler builder names.
+ */
+function scheduleBuilders($buildset, $dir, $suffix)
+{
+    $builders = [];
+    $basePath = "$dir/$suffix";
+    if (is_dir($basePath) && $handle = opendir($basePath)) {
+        while (($entry = readdir($handle)) !== false) {
+            $path = "$basePath/$entry";
+            if (!is_dir($path) && $entry != '.' && $entry != '..') {
+                $builderName = "$suffix$entry";
+                Build::create($buildset, $builderName);
+                array_push($builders, $builderName);
+            }
+        }
+
+        closedir($handle);
+    }
+    return $builders;
 }
 
 ?>
