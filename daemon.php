@@ -48,7 +48,7 @@ function prepareRepository()
  *
  * @param dir Directory path to remove.
  *
- * @returns @Result of rmdir().
+ * @returns Result of rmdir().
  */
 function delTree($dir)
 {
@@ -132,7 +132,7 @@ function createPath($path)
         return false;
     }
 
-    if (!mkdir($path , 0700, true)) {
+    if (!mkdir($path, 0700, true)) {
         die("Failed to create directory: $path\n");
     }
     return true;
