@@ -160,7 +160,7 @@ function makeReport($rawOutput)
     foreach ($input as $line) {
         $re = '/^(.*)(error|warning|Error|Warning|ERROR|WARNING)(:\s+)(.*)$/';
         preg_match($re, $line, $matches);
-        if (sizeof($matches) == 0) {
+        if (sizeof($matches) == 0 || $matches[4] == '0') {
             array_push($output, $line);
             continue;
         }
