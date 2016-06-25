@@ -58,6 +58,7 @@ class DB
                     buildsetid INTEGER,
                     name TEXT NOT NULL,
                     revision TEXT NOT NULL,
+                    timestamp INTEGER,
 
                     PRIMARY KEY (buildsetid)
                 );

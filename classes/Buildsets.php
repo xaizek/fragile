@@ -35,7 +35,7 @@ class Buildsets
      */
     public static function getLastN($n)
     {
-        $sql = 'SELECT buildsetid, name, revision FROM buildsets '
+        $sql = 'SELECT buildsetid, name, revision, timestamp FROM buildsets '
              . "ORDER BY buildsetid DESC LIMIT $n";
         $statement = DB::query($sql);
         if (!$statement) {
@@ -53,7 +53,8 @@ class Buildsets
             array_push($buildsets,
                        new Buildset($buildsetinfo['buildsetid'],
                                     $buildsetinfo['name'],
-                                    $buildsetinfo['revision']));
+                                    $buildsetinfo['revision'],
+                                    $buildsetinfo['timestamp']));
         }
 
         return $buildsets;

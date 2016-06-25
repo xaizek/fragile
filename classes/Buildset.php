@@ -30,16 +30,19 @@ class Buildset
      */
     public static function create($name, $revision)
     {
-        $sql = 'INSERT INTO buildsets(name, revision) VALUES(?, ?)';
+        $sql = 'INSERT INTO buildsets(name, revision, timestamp) '.
+               'VALUES(?, ?, ?)';
         $statement = DB::prepare($sql);
-        if (!$statement || $statement->execute([$name, $revision]) === false) {
+        $now = time();
+        if (!$statement ||
+            $statement->execute([$name, $revision, $now]) === false) {
             die("Failed to schedule buildset\n"
               . print_r(DB::errorInfo(), true));
         }
 
         $buildsetid = DB::lastInsertId();
 
-        return new Buildset($buildsetid, $name, $revision);
+        return new Buildset($buildsetid, $name, $revision, $now);
     }
 
     /**
@@ -51,7 +54,8 @@ class Buildset
      */
     public static function get($buildsetid)
     {
-        $sql = 'SELECT name, revision FROM buildsets WHERE buildsetid = ?';
+        $sql = 'SELECT name, revision, timestamp FROM buildsets '.
+               'WHERE buildsetid = ?';
         $statement = DB::prepare($sql);
         if (!$statement
             || $statement->execute([$buildsetid]) !== true
@@ -61,7 +65,8 @@ class Buildset
 
         return new Buildset($buildsetid,
                             $buildsetinfo['name'],
-                            $buildsetinfo['revision']);
+                            $buildsetinfo['revision'],
+                            $buildsetinfo['timestamp']);
     }
 
     /**
@@ -70,12 +75,14 @@ class Buildset
      * @param buildsetid Buildset ID.
      * @param name Symbolic name of the build (e.g. branch name).
      * @param revision Associated VCS revision.
+     * @param timestamp When the set was scheduled.
      */
-    public function __construct($buildsetid, $name, $revision)
+    public function __construct($buildsetid, $name, $revision, $timestamp)
     {
         $this->buildsetid = $buildsetid;
         $this->name = $name;
         $this->revision = $revision;
+        $this->timestamp = $timestamp;
     }
 
     /**
@@ -92,6 +99,11 @@ class Buildset
      * @brief VCS revision to use for all builds that belong to the buildset.
      */
     public $revision;
+
+    /**
+     * @brief UNIX timestamp of set scheduling time.
+     */
+    public $timestamp;
 }
 
 ?>

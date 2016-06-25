@@ -61,7 +61,8 @@ function printBuildTable($buildsets, $builders)
     // output table header
     print '<table class="dashboard"><tr><td></td>' . "\n";
     foreach ($buildsets as $buildset) {
-        print "<td class='revision'>";
+        $ts = gmdate('Y-m-d H:i:s', $buildset->timestamp) . ' UTC';
+        print "<td class='revision' title='$ts'>";
         print '#' . htmlentities($buildset->buildsetid) . ': ';
         print htmlentities($buildset->revision);
         print "<br/><span class='name'>"
