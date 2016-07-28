@@ -81,8 +81,8 @@ function runBuilds()
         // checkout revision
         system(__DIR__ . "/vcs/checkout '" . $build->revision . "'", $retval);
         if ($retval != 0) {
-            $build->setStatus('ERROR');
-            print "Failed to checkout revision\n";
+            $build->setResult('ERROR', "Failed to checkout revision\n",
+                $retval);
             continue;
         }
 
