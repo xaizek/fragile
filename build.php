@@ -46,18 +46,19 @@ try {
         print "<td>" . htmlentities($build->exitcode) . "</td>\n";
         print "</tr></table>\n";
 
-        print "<hr/>\n";
-
         $rawOutput = $build->getOutput();
         $parts = preg_split('/\n\n/', $rawOutput, 2);
 
-        if ($parts[0] != '') {
+        if (!empty($parts[0])) {
+            print "<hr/>\n";
             print "<div class='buildreport'>$parts[0]</div>";
-            print "<hr/>";
         }
-        print "<pre>";
-        print $parts[1];
-        print "</pre>\n";
+        if (!empty($parts[1])) {
+            print "<hr/>\n";
+            print "<pre>";
+            print $parts[1];
+            print "</pre>\n";
+        }
     }
 } catch (PDOException $e) {
     print "<h3>No Database</h3>\n";
