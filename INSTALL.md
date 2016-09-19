@@ -12,10 +12,8 @@ reside in the same directory.
 ## Configuration ##
 
 Before installing files, copy `config.php.sample` to `config.php` and fill in
-all the values of according to comments there.  This file holds configuration of
+all the values according to comments there.  This file holds configuration of
 both web and daemon parts and should be kept in sync between the two parts.
-
-See `hooks/` directory and `README` file there for instructions on using hooks.
 
 ## Installation ##
 
@@ -28,7 +26,7 @@ but only if it has corresponding permissions.
 
 ### Managing builders ###
 
-Builders are just scripts in `<web-path>/builders` directory.  Names are those
+Builders are just scripts in `<web-path>/builders` directory.  Names of those
 scripts are names of builders.  Script exit code should indicate result of a
 build.  When script is run:
 
