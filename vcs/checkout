@@ -11,4 +11,4 @@ export GIT_WORK_TREE="$FRAGILE_REPO"
 export GIT_DIR="$FRAGILE_REPO/.git"
 
 git remote update
-git checkout "$revision"
+git checkout --force "$revision"
