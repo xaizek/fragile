@@ -65,18 +65,25 @@ function delTree($dir)
 function serve()
 {
     while (true) {
-        runBuilds();
-        sleep(DAEMON_TIMEOUT);
+        $builds = Builds::getPendingBuilds();
+        while (empty($builds)) {
+            sleep(DAEMON_TIMEOUT);
+            $builds = Builds::getPendingBuilds();
+        }
+
+        runBuilds($builds);
     }
 }
 
 /**
  * @brief Executes all pending builds.
+ *
+ * @param builds List of builds to run.
  */
-function runBuilds()
+function runBuilds($builds)
 {
-    $builds = Builds::getPendingBuilds();
-
+    // TODO: sort $builds according to $build->$buildset and then by
+    // $build->buildername same way as it's done for the dashboard
     foreach ($builds as $build) {
         // checkout revision
         system(__DIR__ . "/vcs/checkout '" . $build->revision . "'", $retval);
