@@ -158,7 +158,7 @@ function makeReport($rawOutput)
     $output = [];
     $msgnum = 1;
     foreach ($input as $line) {
-        $re = '/^(.*)(error|warning|Error|Warning|ERROR|WARNING)(:\s+)(.*)$/';
+        $re = '/^(.*)(error|warning|Error|Warning|ERROR|WARNING|ERROR SUMMARY)(:\s+)(.*)$/';
         preg_match($re, $line, $matches);
         if (sizeof($matches) == 0 || $matches[4] == '0') {
             array_push($output, $line);
