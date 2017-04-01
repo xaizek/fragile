@@ -32,6 +32,7 @@ build.  When script is run:
 
  * `$FRAGILE_REPO` environment variable points to location of checked out
    repository;
+ * `$FRAGILE_REF` environment variable is set to the name of reference of VCS;
  * current directory is build directory.
 
 Use dummy builders from `builders/` directory during setup to check

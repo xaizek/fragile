@@ -14,6 +14,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once __DIR__ . '/classes/Builds.php';
+require_once __DIR__ . '/classes/Buildset.php';
 require_once __DIR__ . '/config.php';
 
 // TODO: maybe mark all "running" builds as failed
@@ -85,6 +86,12 @@ function runBuilds($builds)
     // TODO: sort $builds according to $build->$buildset and then by
     // $build->buildername same way as it's done for the dashboard
     foreach ($builds as $build) {
+        $buildset = Buildset::get($build->buildset);
+
+        if (!putenv('FRAGILE_REF=' . $buildset->name)) {
+            die("Failed to set FRAGILE_REF environment variable\n");
+        }
+
         // checkout revision
         system(__DIR__ . "/vcs/checkout '" . $build->revision . "'", $retval);
         if ($retval != 0) {
