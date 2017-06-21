@@ -16,9 +16,8 @@
 require_once __DIR__ . '/classes/Build.php';
 require_once __DIR__ . '/classes/Buildset.php';
 
-// TODO: maybe allow specifying list of builders
-if (sizeof($argv) != 3) {
-    print "Usage: ${argv[0]} name revision\n";
+if (sizeof($argv) < 3) {
+    print "Usage: ${argv[0]} name revision [builder-name..]\n";
     die("Wrong invocation\n");
 }
 
@@ -27,9 +26,15 @@ $revision = $argv[2];
 
 $buildset = Buildset::create($name, $revision);
 
-$builders = scheduleBuilders($buildset, BUILDERS_PATH, '');
-$builders = array_merge($builders,
-                        scheduleBuilders($buildset, BUILDERS_PATH, "$name/"));
+if (sizeof($argv) > 3) {
+    $builders = scheduleBuilders($buildset, BUILDERS_PATH,
+                                 array_slice($argv, 3));
+} else {
+    $builders = scheduleBuildersIn($buildset, BUILDERS_PATH, '');
+    $builders = array_merge($builders,
+                            scheduleBuildersIn($buildset, BUILDERS_PATH,
+                                              "$name/"));
+}
 
 print "Buildset ID: $buildset->buildsetid\n";
 if (sizeof($builders) == 0) {
@@ -41,6 +46,30 @@ if (sizeof($builders) == 0) {
 }
 
 /**
+ * @brief Schedules builders in @p dir directory specified by their name.
+ *
+ * @param buildset Parent buildset for newly created builds.
+ * @param dir Directory to look for builders.
+ * @param names List of builder names (appended to @p dir by one).
+ *
+ * @returns Array of scheduler builder names.
+ */
+function scheduleBuilders($buildset, $dir, $names)
+{
+    $builders = [];
+    foreach ($names as $name) {
+        $path = "$dir/$name";
+        if (!is_dir($path)) {
+            Build::create($buildset, $name);
+            array_push($builders, $name);
+
+            closedir($handle);
+        }
+    }
+    return $builders;
+}
+
+/**
  * @brief Schedules builders discovered in @p dir directory.
  *
  * @param buildset Parent buildset for newly created builds.
@@ -49,7 +78,7 @@ if (sizeof($builders) == 0) {
  *
  * @returns Array of scheduler builder names.
  */
-function scheduleBuilders($buildset, $dir, $suffix)
+function scheduleBuildersIn($buildset, $dir, $suffix)
 {
     $builders = [];
     $basePath = "$dir/$suffix";
