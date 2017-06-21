@@ -79,7 +79,7 @@ function printBuildTable($buildsets, $builders)
             if (array_key_exists($buildsetid, $builderinfo)) {
                 $status = $builderinfo[$buildsetid]->status;
             } else {
-                $status = '-';
+                $status = '‒';
             }
 
             if (statusHasOutput($status)) {
@@ -151,7 +151,7 @@ function statusHasOutput($status)
 function classFromStatus($status)
 {
     switch ($status) {
-        case '-':       return 'build_absent';
+        case '‒':       return 'build_absent';
         case 'pending': return 'build_pending';
         case 'running': return 'build_running';
         case 'OK':      return 'build_success';
