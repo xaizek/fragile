@@ -35,16 +35,16 @@ function displayDashboard()
     $buildsets = Buildsets::getLastN(REVISIONS_LIMIT);
     $builds = Builds::getBuildsForAll($buildsets);
 
+    if (sizeof($builds) == 0) {
+        print "<h3>No Builds</h3>\n";
+        return;
+    }
+
     $builders = [];
     foreach ($builds as $build) {
         $builders[$build->buildername][$build->buildset] = $build;
     }
-
-    if (sizeof($builders) == 0) {
-        print "<h3>No Builds</h3>\n";
-    } else {
-        printBuildTable($buildsets, $builders);
-    }
+    printBuildTable($buildsets, $builders);
 }
 
 /**
