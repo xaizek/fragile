@@ -132,6 +132,12 @@ class Builds
      */
     public static function builderCmp($a, $b)
     {
+        // buildset IDs are the primary key
+        if ($a->buildset != $b->buildset) {
+            return $a->buildset - $b->buildset;
+        }
+
+        // builder name is the secondary key
         $condA = (strpos($a, '/') !== false);
         $condB = (strpos($b, '/') !== false);
         if ($condA ^ $condB) {

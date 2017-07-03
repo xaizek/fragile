@@ -83,9 +83,14 @@ function serve()
  */
 function runBuilds($builds)
 {
-    // TODO: sort $builds according to $build->$buildset and then by
-    // $build->buildername same way as it's done for the dashboard
+    $builders = [];
     foreach ($builds as $build) {
+        $builders[$build->buildername] = $build;
+    }
+    // sort builders by their name
+    uksort($builders, "Builds::builderCmp");
+
+    foreach ($builders as $build) {
         $buildset = Buildset::get($build->buildset);
 
         if (!putenv('FRAGILE_REF=' . $buildset->name)) {
