@@ -56,7 +56,7 @@ function displayDashboard()
 function printBuildTable($buildsets, $builders)
 {
     // sort builders by their name
-    uksort($builders, "builderCmp");
+    uksort($builders, "Builds::builderCmp");
 
     // output table header
     print '<table class="dashboard"><tr><td></td>' . "\n";
@@ -99,26 +99,6 @@ function printBuildTable($buildsets, $builders)
     }
 
     print "</table>\n";
-}
-
-/**
- * @brief Custom key comparison function.
- *
- * Treats keys with slashes in them as greater than other keys.
- *
- * @param a First key.
- * @param b Second key.
- *
- * @returns Value less than, equal to or greater than zero to indicate order.
- */
-function builderCmp($a, $b)
-{
-    $condA = (strpos($a, '/') !== false);
-    $condB = (strpos($b, '/') !== false);
-    if ($condA ^ $condB) {
-        return $condA ? 1 : -1;
-    }
-    return strcmp($a, $b);
 }
 
 /**

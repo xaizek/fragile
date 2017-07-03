@@ -118,6 +118,27 @@ class Builds
     {
         return $x->buildsetid;
     }
+
+    /**
+     * @brief Custom key comparison function for a dictionary.
+     *
+     * Treats keys with slashes in them as greater than other keys.
+     *
+     * @param a First key.
+     * @param b Second key.
+     *
+     * @returns Value less than, equal to or greater than zero to indicate
+     *          order.
+     */
+    public static function builderCmp($a, $b)
+    {
+        $condA = (strpos($a, '/') !== false);
+        $condB = (strpos($b, '/') !== false);
+        if ($condA ^ $condB) {
+            return $condA ? 1 : -1;
+        }
+        return strcmp($a, $b);
+    }
 }
 
 ?>
