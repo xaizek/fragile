@@ -117,7 +117,7 @@ span.title
 .build_absent
 {
     background-color: white;
-    color: black;
+    color: #666666;
 }
 
 .build_pending
