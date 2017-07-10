@@ -5,8 +5,10 @@ _This file last updated on 08 July, 2017_
 ### Brief Description ###
 
 This is a simple, minimal and straightforward CI to compensate complexity of
-many CIs out there among which the author of this one couldn't pick (although he
-tried really hard to omit creating one more CI).
+many CIs out there among which author of this one couldn't pick, even though he
+tried really hard to omit creating one more CI.  It's worth nothing that end
+result turned out to be somewhat more complicated than planned, which might be
+fixed in the future.
 
 ### Dependencies ###
 
