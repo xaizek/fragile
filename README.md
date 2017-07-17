@@ -1,6 +1,6 @@
 **fragile**, _v0.5_, _2015 – 2017_
 
-_This file last updated on 10 July, 2017_
+_This file last updated on 17 July, 2017_
 
 ### Brief Description ###
 
@@ -25,7 +25,8 @@ fixed in the future.
 * No parallel execution
 * No external builders
 * Automatic errors/warnings discovery and highlighting
-* HTML, there is no useless animations and such via any scripts
+* Just HTML, no useless animations or anything like that
+* Simple SVG badges (`badges/svg/<branch-name>`)
 
 ### Screenshot ###
 

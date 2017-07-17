@@ -13,7 +13,7 @@ set -e
 mkdir -p "$web_path" "$daemon_path"
 
 cp .htaccess \
-   build.php config.php dashboard.php footer.php header.php \
+   badge.php build.php config.php dashboard.php footer.php header.php \
    style.css favicon.png \
    "$web_path"
 cp -r classes/ vcs/ "$web_path"

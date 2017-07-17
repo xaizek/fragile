@@ -59,6 +59,38 @@ class Buildsets
 
         return $buildsets;
     }
+
+    /**
+     * @brief Retrieves last completed (no pending builders) build of a branch.
+     *
+     * @param name Reference (e.g., branch) name.
+     *
+     * @returns Latest completed build if present, otherwise @c null.
+     */
+    public static function getLastCompletedOf($name)
+    {
+        $sql = 'SELECT buildsetid, name, revision, timestamp FROM buildsets '
+             . 'WHERE name = ? AND NOT EXISTS '
+             . '( SELECT 1 FROM builds '
+             .   'WHERE builds.buildset = buildsets.buildsetid '
+             .     'AND status = "pending" ) '
+             . 'ORDER BY buildsetid DESC LIMIT 1';
+        $statement = DB::prepare($sql);
+        if (!$statement || !$statement->execute([$name])) {
+            die("Failed to query buildset\n" . print_r(DB::errorInfo(), true));
+        }
+
+        $buildsetinfo = $statement->fetch();
+        if ($buildsetinfo === false) {
+            // no build was found, this is not an error
+            return null;
+        }
+
+        return new Buildset($buildsetinfo['buildsetid'],
+                            $buildsetinfo['name'],
+                            $buildsetinfo['revision'],
+                            $buildsetinfo['timestamp']);
+    }
 }
 
 ?>
