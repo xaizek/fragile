@@ -90,6 +90,7 @@ function runBuilds($builds)
     // sort builders by their name and buildset IDs
     usort($sortedBuilds, "Builds::builderCmp");
 
+    $revision = '';
     foreach ($sortedBuilds as $build) {
         $buildset = Buildset::get($build->buildset);
 
@@ -97,12 +98,16 @@ function runBuilds($builds)
             die("Failed to set FRAGILE_REF environment variable\n");
         }
 
-        // checkout revision
-        system(__DIR__ . "/vcs/checkout '" . $build->revision . "'", $retval);
-        if ($retval != 0) {
-            $build->setResult('ERROR', "Failed to checkout revision\n",
-                $retval);
-            continue;
+        // checkout revision while not doing anything if we already on it
+        if ($build->revision !== $revision) {
+            $revision = $build->revision;
+            system(__DIR__ . "/vcs/checkout '" . $revision . "'", $retval);
+            if ($retval != 0) {
+                $build->setResult('ERROR', "Failed to checkout revision\n",
+                    $retval);
+                $revision =  '';
+                continue;
+            }
         }
 
         runBuild($build);
