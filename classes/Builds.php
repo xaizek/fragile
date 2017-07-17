@@ -120,12 +120,15 @@ class Builds
     }
 
     /**
-     * @brief Custom key comparison function for a dictionary.
+     * @brief Custom value comparison function for a dictionary of builds.
      *
-     * Treats keys with slashes in them as greater than other keys.
+     * As a primary key uses buildset IDs.
      *
-     * @param a First key.
-     * @param b Second key.
+     * As a secondary key treats builder names with slashes in them as greater
+     * than other keys.
+     *
+     * @param a First build.
+     * @param b Second build.
      *
      * @returns Value less than, equal to or greater than zero to indicate
      *          order.
@@ -137,6 +140,23 @@ class Builds
             return $a->buildset - $b->buildset;
         }
 
+        // builder name is the secondary key
+        return self::builderNameCmp($a->buildername, $b->buildername);
+    }
+
+    /**
+     * @brief Custom key comparison function for a dictionary of builds.
+     *
+     * Treats builder names with slashes in them as greater than other keys.
+     *
+     * @param a First key.
+     * @param b Second key.
+     *
+     * @returns Value less than, equal to or greater than zero to indicate
+     *          order.
+     */
+    public static function builderNameCmp($a, $b)
+    {
         // builder name is the secondary key
         $condA = (strpos($a, '/') !== false);
         $condB = (strpos($b, '/') !== false);

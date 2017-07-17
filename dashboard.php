@@ -56,7 +56,7 @@ function displayDashboard()
 function printBuildTable($buildsets, $builders)
 {
     // sort builders by their name
-    uksort($builders, "Builds::builderCmp");
+    uksort($builders, "Builds::builderNameCmp");
 
     // output table header
     print '<table class="dashboard"><tr><td></td>' . "\n";

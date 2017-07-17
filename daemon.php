@@ -83,14 +83,14 @@ function serve()
  */
 function runBuilds($builds)
 {
-    $builders = [];
+    $sortedBuilds = [];
     foreach ($builds as $build) {
-        $builders[$build->buildername] = $build;
+        $sortedBuilds[$build->buildername] = $build;
     }
-    // sort builders by their name
-    uksort($builders, "Builds::builderCmp");
+    // sort builders by their name and buildset IDs
+    usort($sortedBuilds, "Builds::builderCmp");
 
-    foreach ($builders as $build) {
+    foreach ($sortedBuilds as $build) {
         $buildset = Buildset::get($build->buildset);
 
         if (!putenv('FRAGILE_REF=' . $buildset->name)) {
