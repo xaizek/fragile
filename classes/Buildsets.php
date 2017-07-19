@@ -73,7 +73,7 @@ class Buildsets
              . 'WHERE name = ? AND NOT EXISTS '
              . '( SELECT 1 FROM builds '
              .   'WHERE builds.buildset = buildsets.buildsetid '
-             .     'AND status = "pending" ) '
+             .     'AND status IN ("pending", "running") ) '
              . 'ORDER BY buildsetid DESC LIMIT 1';
         $statement = DB::prepare($sql);
         if (!$statement || !$statement->execute([$name])) {
