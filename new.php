@@ -59,7 +59,7 @@ function scheduleBuilders($buildset, $dir, $names)
     $builders = [];
     foreach ($names as $name) {
         $path = "$dir/$name";
-        if (!is_dir($path)) {
+        if (!is_dir($path) && is_executable($path)) {
             Build::create($buildset, $name);
             array_push($builders, $name);
 
@@ -85,7 +85,8 @@ function scheduleBuildersIn($buildset, $dir, $suffix)
     if (is_dir($basePath) && $handle = opendir($basePath)) {
         while (($entry = readdir($handle)) !== false) {
             $path = "$basePath/$entry";
-            if (!is_dir($path) && $entry != '.' && $entry != '..') {
+            if (!is_dir($path) && $entry != '.' && $entry != '..' &&
+                is_executable($path)) {
                 $builderName = "$suffix$entry";
                 Build::create($buildset, $builderName);
                 array_push($builders, $builderName);
