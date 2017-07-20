@@ -122,7 +122,6 @@ function runBuilds($builds)
 function runBuild($build)
 {
     // TODO: measure and record execution time of the build
-    // TODO: record time and date of the build
 
     $build->setStatus('running');
 
