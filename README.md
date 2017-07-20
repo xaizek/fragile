@@ -38,4 +38,6 @@ One can see it being used [here](http://ci.vifm.info/).
 
 ### License ###
 
+![AGPLv3+](other/agplv3.png)
+
 GNU Affero General Public License, version 3 or later.
