@@ -151,6 +151,9 @@ function runBuild($build)
  */
 function createPath($path)
 {
+    // drop cached information about the path
+    clearstatcache(false, $path);
+
     if (is_dir($path)) {
         return false;
     }
