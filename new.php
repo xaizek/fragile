@@ -62,8 +62,6 @@ function scheduleBuilders($buildset, $dir, $names)
         if (!is_dir($path) && is_executable($path)) {
             Build::create($buildset, $name);
             array_push($builders, $name);
-
-            closedir($handle);
         }
     }
     return $builders;
