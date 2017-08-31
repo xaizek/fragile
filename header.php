@@ -1,4 +1,4 @@
-<!-- Copyright (C) 2015 xaizek <xaizek@openmailbox.org>
+<!-- Copyright (C) 2015 xaizek <xaizek@posteo.net>
 
 fragile is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free Software
