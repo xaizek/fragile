@@ -43,7 +43,8 @@ try {
     $color = $passed ? '#4b1' : '#555';
 
     header('Content-type: image/svg+xml');
-    header('Cache-control: no-cache');
+    // Cache badge for at most an hour.
+    header('Cache-control: max-age=3600');
     print
     "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"90\" height=\"20\">
         <linearGradient id=\"a\" x2=\"0\" y2=\"100%\">
