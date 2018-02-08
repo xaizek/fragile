@@ -1,4 +1,4 @@
-**fragile**, _v0.5_, _2015 – 2017_
+**fragile**, _v0.5_, _2015 – 2018_
 
 _This file last updated on 17 July, 2017_
 

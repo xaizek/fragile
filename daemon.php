@@ -187,7 +187,7 @@ function makeReport($rawOutput)
         $re = '/^(.*)(error|warning|Error|Warning|ERROR|WARNING|ERROR SUMMARY)(:\s+)(.*)$/';
         preg_match($re, $line, $matches);
         if (sizeof($matches) == 0 || $matches[4] == '0') {
-            array_push($output, $line);
+            array_push($output, htmlentities($line));
             continue;
         }
 
@@ -202,10 +202,10 @@ function makeReport($rawOutput)
             $style = 'warning';
         }
 
-        $line = "$matches[1]"
-              . "<span class='$style-title'>$matches[2]</span>"
-              . "$matches[3]"
-              . "<span class='$style-msg'>$matches[4]</span>";
+        $line = htmlentities($matches[1])
+              . "<span class='$style-title'>".htmlentities($matches[2])."</span>"
+              . htmlentities($matches[3])
+              . "<span class='$style-msg'>".htmlentities($matches[4])."</span>";
 
         array_push($output, $anchor . $line);
 
