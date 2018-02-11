@@ -15,6 +15,8 @@
 
 require_once __DIR__ . '/classes/Build.php';
 require_once __DIR__ . '/classes/Buildset.php';
+require_once __DIR__ . '/classes/Utils.php';
+require_once __DIR__ . '/config.php';
 
 if (sizeof($argv) < 3) {
     print "Usage: ${argv[0]} name revision [builder-name..]\n";
@@ -23,6 +25,20 @@ if (sizeof($argv) < 3) {
 
 $name = $argv[1];
 $revision = $argv[2];
+
+if (substr($name, 0, strlen('fragile/')) === 'fragile/') {
+    $command = substr($name, strlen('fragile/'));
+    switch ($command) {
+        case 'clean':
+            // XXX: ideally, this would only schedule the operation for the
+            //      daemon; currently, we can change FS in parallel with it
+            Utils::delTree(BUILDS_PATH);
+            exit("Cleaned ".BUILDS_PATH);
+
+        default:
+            exit("Unknown command: .$command");
+    }
+}
 
 $buildset = Buildset::create($name, $revision);
 
