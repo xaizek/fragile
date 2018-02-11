@@ -15,6 +15,27 @@ Before installing files, copy `config.php.sample` to `config.php` and fill in
 all the values according to comments there.  This file holds configuration of
 both web and daemon parts and should be kept in sync between the two parts.
 
+## Controlling ##
+
+Some commands can be send simply by pushing branches which are named according
+to the following pattern:
+```
+fragile-do/<command><optional %-seperated arguments>
+```
+
+Where `<command>` can be:
+ - `clean` – remove all build directories
+ - `repeat%<build id>` – restart specified build
+
+Examples:
+
+```
+# remove buildbox
+git push --force ci HEAD:fragile-do/clean
+# schedule all builders for build #945 as a new build
+git push --force ci HEAD^:fragile-do/repeat%945
+```
+
 ## Installation ##
 
 Run the `install` script to perform the installation:
