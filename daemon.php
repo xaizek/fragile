@@ -15,6 +15,7 @@
 
 require_once __DIR__ . '/classes/Builds.php';
 require_once __DIR__ . '/classes/Buildset.php';
+require_once __DIR__ . '/classes/Utils.php';
 require_once __DIR__ . '/config.php';
 
 // TODO: maybe mark all "running" builds as failed
@@ -39,25 +40,9 @@ function prepareRepository()
 
     system(__DIR__ . "/vcs/clone '" . REPO_URL . "'", $retval);
     if ($retval != 0) {
-        delTree(REPO_PATH);
+        Utils::delTree(REPO_PATH);
         die("Failed to clone repository\n");
     }
-}
-
-/**
- * @brief Removes subtree.
- *
- * @param dir Directory path to remove.
- *
- * @returns Result of rmdir().
- */
-function delTree($dir)
-{
-    $files = array_diff(scandir($dir), ['.', '..']);
-    foreach ($files as $file) {
-        (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
-    }
-    return rmdir($dir);
 }
 
 /**
