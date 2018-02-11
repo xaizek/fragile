@@ -25,26 +25,44 @@ if (sizeof($argv) < 3) {
 
 $name = $argv[1];
 $revision = $argv[2];
+$builders = array_slice($argv, 3);
 
 if (substr($name, 0, strlen('fragile/')) === 'fragile/') {
     $command = substr($name, strlen('fragile/'));
-    switch ($command) {
+    $pieces = explode('%', $command);
+    switch ($pieces[0]) {
         case 'clean':
             // XXX: ideally, this would only schedule the operation for the
             //      daemon; currently, we can change FS in parallel with it
             Utils::delTree(BUILDS_PATH);
             exit("Cleaned ".BUILDS_PATH);
+        case 'repeat':
+            if (sizeof($pieces) != 2) {
+                die('repeat command expects an argument');
+            }
+
+            $buildset = Buildset::get($pieces[1]);
+            if ($buildset === null) {
+                die("repeat command expects a valid buildset id as an ".
+                    "argument\ngot: ${pieces[1]}");
+            }
+
+            $name = $buildset->name;
+            $revision = $buildset->revision;
+            $builders = [];
+
+            print "Repeating $name@$revision from #{$pieces[1]}\n";
+            break;
 
         default:
-            exit("Unknown command: .$command");
+            exit("Unknown command: $command");
     }
 }
 
 $buildset = Buildset::create($name, $revision);
 
-if (sizeof($argv) > 3) {
-    $builders = scheduleBuilders($buildset, BUILDERS_PATH,
-                                 array_slice($argv, 3));
+if (!empty($builders)) {
+    $builders = scheduleBuilders($buildset, BUILDERS_PATH, $builders);
 } else {
     $builders = scheduleBuildersIn($buildset, BUILDERS_PATH, '');
     $builders = array_merge($builders,
