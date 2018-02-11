@@ -27,8 +27,8 @@ $name = $argv[1];
 $revision = $argv[2];
 $builders = array_slice($argv, 3);
 
-if (substr($name, 0, strlen('fragile/')) === 'fragile/') {
-    $command = substr($name, strlen('fragile/'));
+if (substr($name, 0, strlen('fragile-do/')) === 'fragile-do/') {
+    $command = substr($name, strlen('fragile-do/'));
     $pieces = explode('%', $command);
     switch ($pieces[0]) {
         case 'clean':
