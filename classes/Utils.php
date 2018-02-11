@@ -29,10 +29,11 @@ class Utils
     {
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
-            if (is_dir("$dir/$file")) {
-                Utils::delTree("$dir/$file");
+            $path = "$dir/$file";
+            if (is_dir($path) && !is_link($path)) {
+                Utils::delTree($path);
             } else {
-                unlink("$dir/$file");
+                unlink($path);
             }
         }
         return rmdir($dir);
