@@ -82,7 +82,7 @@ EOS
     }
 
     /**
-     * @brief Singleton instance of the DB classs.
+     * @brief Singleton instance of the DB class.
      */
     private static $objInstance;
 }
