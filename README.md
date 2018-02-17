@@ -1,6 +1,6 @@
-**fragile**, _v0.5_, _2015 – 2018_
+**fragile**, _v0.6_, _2015 – 2018_
 
-_This file last updated on 11 February, 2018_
+_This file last updated on 17 February, 2018_
 
 ### Brief Description ###
 
