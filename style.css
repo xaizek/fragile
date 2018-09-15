@@ -60,6 +60,11 @@ td.title
     text-align: right;
 }
 
+span.errors, span.warnings
+{
+    font-weight: bold;
+}
+
 pre
 {
     padding-left: 3px;

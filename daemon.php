@@ -199,12 +199,12 @@ function makeReport($rawOutput)
 
     $header = '';
     if (sizeof($errors) != 0) {
-        $header .= "Errors:<ol><li>";
+        $header .= "<span class='errors'>Errors:</span><ol><li>";
         $header .= join("</li><li>", $errors);
         $header .= "</li></ol>\n";
     }
     if (sizeof($warnings) != 0) {
-        $header .= "Warnings:<ol><li>";
+        $header .= "<span class='warnings'>Warnings:</span><ol><li>";
         $header .= join("</li><li>", $warnings);
         $header .= "</li></ol>\n";
     }
