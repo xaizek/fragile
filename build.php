@@ -31,20 +31,32 @@ try {
     } elseif (($buildset = Buildset::get($buildsetid)) === null) {
         print "<h3>No Such Buildset</h3>\n";
     } else {
-        print "<table class='buildinfo'><tr>\n";
-        print "<td class='title'>Buildset:</td>\n";
-        print "<td>#" . htmlentities($buildset->buildsetid) . "</td>\n";
-        print "<td class='title'>Builder:</td>\n";
-        print "<td>" . htmlentities($buildername) . "</td>\n";
-        print "<td class='title'>Revision:</td>\n";
-        print "<td>" . htmlentities($buildset->revision). "</td>\n";
-        print "<td class='title'>Ref:</td>\n";
-        print "<td>" . htmlentities($buildset->name) . "</td>\n";
-        print "<td class='title'>Result:</td>\n";
-        print "<td>" . htmlentities($build->status) . "</td>\n";
-        print "<td class='title'>Exit code:</td>\n";
-        print "<td>" . htmlentities($build->exitcode) . "</td>\n";
-        print "</tr></table>\n";
+        print "<div class='infobar'>\n";
+        print "<span class='infocell'>\n";
+        print "<span class='infotitle'>Buildset:</span>\n";
+        print htmlentities($buildset->buildsetid);
+        print "</span>\n";
+        print "<span class='infocell'>\n";
+        print "<span class='infotitle'>Builder:</span>\n";
+        print htmlentities($buildername);
+        print "</span>\n";
+        print "<span class='infocell'>\n";
+        print "<span class='infotitle'>Revision:</span>\n";
+        print htmlentities($buildset->revision);
+        print "</span>\n";
+        print "<span class='infocell'>\n";
+        print "<span class='infotitle'>Ref:</span>\n";
+        print htmlentities($buildset->name);
+        print "</span>\n";
+        print "<span class='infocell'>\n";
+        print "<span class='infotitle'>Result:</span>\n";
+        print htmlentities($build->status);
+        print "</span>\n";
+        print "<span class='infocell'>\n";
+        print "<span class='infotitle'>Exit code:</span>\n";
+        print htmlentities($build->exitcode);
+        print "</span>\n";
+        print "</div>\n";
 
         $rawOutput = $build->getOutput();
         $parts = preg_split('/\n\n/', $rawOutput, 2);
