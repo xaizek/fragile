@@ -43,21 +43,33 @@ table.dashboard
     margin: 1em auto;
 }
 
-table.buildinfo
-{
-    border-spacing: 10px;
-    margin-top: -15px;
-}
-
 tr, td
 {
     padding: 2px 4px;
 }
 
-td.title
+div.infobar
+{
+    margin-left: 15px;
+    margin-top: -9px;
+    margin-bottom: 15px;
+}
+
+span.infocell
+{
+    margin-right: 10px;
+    padding: 5px 8px;
+    background-color: #FFD0C0;
+}
+
+span.infotitle
 {
     font-weight: bold;
-    text-align: right;
+}
+
+span.errors, span.warnings
+{
+    font-weight: bold;
 }
 
 pre
