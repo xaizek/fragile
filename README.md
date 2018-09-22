@@ -1,6 +1,6 @@
 **fragile**, _v0.6_, _2015 – 2018_
 
-_This file last updated on 17 February, 2018_
+_This file last updated on 22 September, 2018_
 
 ### Brief Description ###
 
@@ -28,6 +28,8 @@ fixed in the future.
 * Just HTML, no useless animations or anything like that
 * Simple SVG badges (`badges/svg/<branch-name>`)
 * Simple control interface through pushes to the repository
+* Smart order of running builders (those which failed on previous run on the
+  branch are executed first)
 
 ### Screenshot ###
 

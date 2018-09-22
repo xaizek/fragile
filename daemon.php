@@ -15,6 +15,7 @@
 
 require_once __DIR__ . '/classes/Builds.php';
 require_once __DIR__ . '/classes/Buildset.php';
+require_once __DIR__ . '/classes/Buildsets.php';
 require_once __DIR__ . '/classes/Utils.php';
 require_once __DIR__ . '/config.php';
 
@@ -68,30 +69,58 @@ function serve()
  */
 function runBuilds($builds)
 {
-    // sort builders by their name and buildset IDs
-    usort($builds, "Builds::builderCmp");
+    $bysets = [];
+    foreach ($builds as $build) {
+        if (!array_key_exists($build->buildset, $bysets)) {
+            $bysets[$build->buildset] = [];
+        }
+        array_push($bysets[$build->buildset], $build);
+    }
 
     $revision = '';
-    foreach ($builds as $build) {
+    foreach ($bysets as $builds) {
         $buildset = Buildset::get($build->buildset);
+
+        $prevBuildset = Buildsets::getLastCompletedOf($buildset->name);
+        if ($prevBuildset !== null) {
+            $prioritized = [];
+            foreach (Builds::getBuildsForAll([$prevBuildset]) as $build) {
+                if ($build->status !== 'OK') {
+                    array_push($prioritized, $build->buildername);
+                }
+            }
+
+            usort($builds, function ($a, $b) use ($prioritized) {
+                $pa = in_array($a->buildername, $prioritized, TRUE) ? 1 : 0;
+                $pb = in_array($b->buildername, $prioritized, TRUE) ? 1 : 0;
+                if ($pb !== $pa) {
+                    return $pb - $pa;
+                }
+                return Builds::builderCmp($a, $b);
+            });
+        } else {
+            usort($builds, "Builds::builderCmp");
+        }
 
         if (!putenv('FRAGILE_REF=' . $buildset->name)) {
             die("Failed to set FRAGILE_REF environment variable\n");
         }
 
-        // checkout revision while not doing anything if we already on it
-        if ($build->revision !== $revision) {
-            $revision = $build->revision;
-            system(__DIR__ . "/vcs/checkout '" . $revision . "'", $retval);
-            if ($retval != 0) {
-                $build->setResult('ERROR', "Failed to checkout revision\n",
-                    $retval);
-                $revision = '';
-                continue;
+        foreach ($builds as $build) {
+            // checkout revision while not doing anything if we already on it
+            if ($build->revision !== $revision) {
+                $revision = $build->revision;
+                system(__DIR__ . "/vcs/checkout '" . $revision . "'", $retval);
+                if ($retval != 0) {
+                    $build->setResult('ERROR', "Failed to checkout revision\n",
+                        $retval);
+                    $revision = '';
+                    continue;
+                }
             }
-        }
 
-        runBuild($build);
+            runBuild($build);
+        }
     }
 }
 
