@@ -62,12 +62,14 @@ if (substr($name, 0, strlen('fragile-do/')) === 'fragile-do/') {
 $buildset = Buildset::create($name, $revision);
 
 if (!empty($builders)) {
-    $builders = scheduleBuilders($buildset, BUILDERS_PATH, $builders);
+    $builders = pickBuilders(BUILDERS_PATH, $builders);
 } else {
-    $builders = scheduleBuildersIn($buildset, BUILDERS_PATH, '');
-    $builders = array_merge($builders,
-                            scheduleBuildersIn($buildset, BUILDERS_PATH,
-                                              "$name/"));
+    $builders = pickBuildersIn(BUILDERS_PATH, '');
+    $builders = array_merge($builders, pickBuildersIn(BUILDERS_PATH, "$name/"));
+}
+
+foreach ($builders as $builderName) {
+    Build::create($buildset, $builderName);
 }
 
 print "Buildset ID: $buildset->buildsetid\n";
@@ -82,19 +84,17 @@ if (sizeof($builders) == 0) {
 /**
  * @brief Schedules builders in @p dir directory specified by their name.
  *
- * @param buildset Parent buildset for newly created builds.
  * @param dir Directory to look for builders.
  * @param names List of builder names (appended to @p dir by one).
  *
- * @returns Array of scheduler builder names.
+ * @returns Array of names of builders to schedule.
  */
-function scheduleBuilders($buildset, $dir, $names)
+function pickBuilders($dir, $names)
 {
     $builders = [];
     foreach ($names as $name) {
         $path = "$dir/$name";
         if (!is_dir($path) && is_executable($path)) {
-            Build::create($buildset, $name);
             array_push($builders, $name);
         }
     }
@@ -104,13 +104,12 @@ function scheduleBuilders($buildset, $dir, $names)
 /**
  * @brief Schedules builders discovered in @p dir directory.
  *
- * @param buildset Parent buildset for newly created builds.
  * @param dir Directory to look for builders.
  * @param suffix Additional suffix for builders path (appended to @p dir).
  *
- * @returns Array of scheduler builder names.
+ * @returns Array of names of builders to schedule.
  */
-function scheduleBuildersIn($buildset, $dir, $suffix)
+function pickBuildersIn($dir, $suffix)
 {
     $builders = [];
     $basePath = "$dir/$suffix";
@@ -120,7 +119,6 @@ function scheduleBuildersIn($buildset, $dir, $suffix)
             if (!is_dir($path) && $entry != '.' && $entry != '..' &&
                 is_executable($path)) {
                 $builderName = "$suffix$entry";
-                Build::create($buildset, $builderName);
                 array_push($builders, $builderName);
             }
         }
