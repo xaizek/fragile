@@ -90,7 +90,7 @@ function runBuilds($builds)
             if ($retval != 0) {
                 $build->setResult('ERROR', "Failed to checkout revision\n",
                     $retval);
-                $revision =  '';
+                $revision = '';
                 continue;
             }
         }
