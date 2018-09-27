@@ -204,12 +204,12 @@ function makeReport($rawOutput)
         $anchor = "<a name='m$msgnum'/>";
         $link = "<a href='#m$msgnum'>" . htmlentities($matches[4]) . "</a>";
 
-        if (strcasecmp($matches[2], 'error') == 0) {
-            array_push($errors, $link);
-            $style = 'error';
-        } else {
+        if (strcasecmp($matches[2], 'warning') == 0) {
             array_push($warnings, $link);
             $style = 'warning';
+        } else {
+            array_push($errors, $link);
+            $style = 'error';
         }
 
         $line = htmlentities($matches[1])
