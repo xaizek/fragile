@@ -196,22 +196,33 @@ function makeReport($rawOutput)
     foreach ($input as $line) {
         $re = '/^(.*)(error|warning|Error|Warning|ERROR|WARNING|ERROR SUMMARY)(:\s+)(.*)$/';
         preg_match($re, $line, $matches);
-        if (sizeof($matches) != 0 && $matches[4] == '0') {
-            array_push($output, htmlentities($line));
-            continue;
-        } elseif (sizeof($matches) != 0) {
+        if (sizeof($matches) != 0 && $matches[4] != '0') {
             $style = strcasecmp($matches[2], 'warning') == 0
                    ? 'warning' : 'error';
             $label = $matches[4];
-        } else {
+        }
+
+        if (sizeof($matches) == 0) {
             $re = '/^()(Segmentation fault)()()$/';
             preg_match($re, $line, $matches);
-            if (sizeof($matches) == 0) {
-                array_push($output, htmlentities($line));
-                continue;
+            if (sizeof($matches) != 0) {
+                $style = 'error';
+                $label = $matches[2];
             }
-            $style = 'error';
-            $label = $matches[2];
+        }
+
+        if (sizeof($matches) == 0) {
+            $re = '/^()([^:]+:\d+)(:\s+)(recipe for target \'.*\' failed)$/';
+            preg_match($re, $line, $matches);
+            if (sizeof($matches) != 0) {
+                $style = 'error';
+                $label = $matches[4];
+            }
+        }
+
+        if (sizeof($matches) == 0) {
+            array_push($output, htmlentities($line));
+            continue;
         }
 
         $anchor = "<a name='m$msgnum'/>";
