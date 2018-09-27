@@ -196,20 +196,31 @@ function makeReport($rawOutput)
     foreach ($input as $line) {
         $re = '/^(.*)(error|warning|Error|Warning|ERROR|WARNING|ERROR SUMMARY)(:\s+)(.*)$/';
         preg_match($re, $line, $matches);
-        if (sizeof($matches) == 0 || $matches[4] == '0') {
+        if (sizeof($matches) != 0 && $matches[4] == '0') {
             array_push($output, htmlentities($line));
             continue;
+        } elseif (sizeof($matches) != 0) {
+            $style = strcasecmp($matches[2], 'warning') == 0
+                   ? 'warning' : 'error';
+            $label = $matches[4];
+        } else {
+            $re = '/^()(Segmentation fault)()()$/';
+            preg_match($re, $line, $matches);
+            if (sizeof($matches) == 0) {
+                array_push($output, htmlentities($line));
+                continue;
+            }
+            $style = 'error';
+            $label = $matches[2];
         }
 
         $anchor = "<a name='m$msgnum'/>";
-        $link = "<a href='#m$msgnum'>" . htmlentities($matches[4]) . "</a>";
+        $link = "<a href='#m$msgnum'>" . htmlentities($label) . "</a>";
 
-        if (strcasecmp($matches[2], 'warning') == 0) {
+        if ($style === 'warning') {
             array_push($warnings, $link);
-            $style = 'warning';
         } else {
             array_push($errors, $link);
-            $style = 'error';
         }
 
         $line = htmlentities($matches[1])
