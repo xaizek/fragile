@@ -10,5 +10,8 @@ sleep 2
 # fail randomly
 if ! [ $(( RANDOM % 2 )) == 0 ]; then
     echo "error: something went wrong"
+    echo "Makefile:211: recipe for target 'target' failed"
+    echo Segmentation fault
+    echo ERROR SUMMARY: 10
     exit 1
 fi
