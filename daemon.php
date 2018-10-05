@@ -200,6 +200,8 @@ function makeReport($rawOutput)
             $style = strcasecmp($matches[2], 'warning') == 0
                    ? 'warning' : 'error';
             $label = $matches[4];
+        } else {
+            $matches = [];
         }
 
         if (sizeof($matches) == 0) {
