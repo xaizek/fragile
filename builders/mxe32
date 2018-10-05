@@ -4,6 +4,7 @@ echo "I'm a MXE-32 build script."
 echo "FRAGILE_REPO = $FRAGILE_REPO"
 
 echo "WARNING: oups"
+echo "ERROR: 0"
 
 sleep 2
 
