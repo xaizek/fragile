@@ -149,7 +149,7 @@ class Build
         if (!$statement ||
             $statement->execute([$status, $output, $exitcode, $this->buildset,
                                  $this->buildername]) === false) {
-            die("Failed to set build status to 'running'\n"
+            die("Failed to set build status to '$status'\n"
               . print_r(DB::errorInfo(), true));
         }
 
