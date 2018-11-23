@@ -134,7 +134,7 @@ class Build
      * @param status New status string.
      * @param output Multiline build output.
      */
-    public function setResult($status, $output, $exitcode)
+    public function markAsFinished($status, $output, $exitcode)
     {
         $output = gzdeflate($output, 9);
         if ($output === false) {
