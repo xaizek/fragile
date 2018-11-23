@@ -133,7 +133,7 @@ function runBuild($build)
 {
     // TODO: measure and record execution time of the build
 
-    $build->setStatus('running');
+    $build->markAsStarted();
 
     $rawOutput = '';
 

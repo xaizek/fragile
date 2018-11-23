@@ -111,19 +111,17 @@ class Build
     }
 
     /**
-     * @brief Updates status of the build.
-     *
-     * @param status New status string.
+     * @brief Updates the build to indicate that it has been started.
      */
-    public function setStatus($status)
+    public function markAsStarted()
     {
-        $sql = 'UPDATE builds SET status = ? '
+        $sql = 'UPDATE builds SET status = "running" '
              . 'WHERE buildset = ? AND buildername = ?';
         $statement = DB::prepare($sql);
         if (!$statement ||
-            $statement->execute([$status, $this->buildset,
+            $statement->execute([$this->buildset,
                                  $this->buildername]) === false) {
-            die("Failed to set build status to 'running'\n"
+            die("Failed to mark build as started\n"
               . print_r(DB::errorInfo(), true));
         }
 
