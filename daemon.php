@@ -112,8 +112,9 @@ function runBuilds($builds)
                 $revision = $build->revision;
                 system(__DIR__ . "/vcs/checkout '" . $revision . "'", $retval);
                 if ($retval != 0) {
-                    $build->setResult('ERROR', "Failed to checkout revision\n",
-                        $retval);
+                    $build->markAsFinished('ERROR',
+                                           "Failed to checkout revision\n",
+                                           $retval);
                     $revision = '';
                     continue;
                 }
@@ -133,7 +134,7 @@ function runBuild($build)
 {
     // TODO: measure and record execution time of the build
 
-    $build->setStatus('running');
+    $build->markAsStarted();
 
     $rawOutput = '';
 
@@ -149,7 +150,8 @@ function runBuild($build)
     $exitcode = pclose($handle);
 
     $output = makeReport($rawOutput);
-    $build->setResult(($exitcode == 0) ? 'OK' : 'FAIL', $output, $exitcode);
+    $build->markAsFinished(($exitcode == 0) ? 'OK' : 'FAIL', $output,
+                           $exitcode);
 }
 
 /**

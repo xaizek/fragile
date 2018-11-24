@@ -1,6 +1,6 @@
 **fragile**, _v0.6_, _2015 – 2018_
 
-_This file last updated on 22 September, 2018_
+_This file last updated on 24 November, 2018_
 
 ### Brief Description ###
 
@@ -30,6 +30,7 @@ fixed in the future.
 * Simple control interface through pushes to the repository
 * Smart order of running builders (those which failed on previous run on the
   branch are executed first)
+* Measuring duration of builds
 
 ### Screenshot ###
 

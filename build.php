@@ -17,6 +17,7 @@ require_once __DIR__ . '/header.php';
 
 require_once __DIR__ . '/classes/Build.php';
 require_once __DIR__ . '/classes/Buildset.php';
+require_once __DIR__ . '/classes/Utils.php';
 
 if (!isset($_GET['buildset']) || !isset($_GET['buildername'])) {
     die("Invalid parameters.\n");
@@ -55,6 +56,10 @@ try {
         print "<span class='infocell'>\n";
         print "<span class='infotitle'>Exit code:</span>\n";
         print htmlentities($build->exitcode);
+        print "</span>\n";
+        print "<span class='infocell'>\n";
+        print "<span class='infotitle'>Duration:</span>\n";
+        print htmlentities(Utils::formatDuration($build->getDuration()));
         print "</span>\n";
         print "</div>\n";
 

@@ -49,34 +49,63 @@ class DB
      * @returns DB instance.
      */
     private static function getInstance() {
-        if (!self::$objInstance) {
-            self::$objInstance = new PDO(DB_DSN);
-            self::$objInstance->setAttribute(PDO::ATTR_ERRMODE,
-                                             PDO::ERRMODE_EXCEPTION);
-            self::$objInstance->exec(<<<EOS
-                CREATE TABLE IF NOT EXISTS buildsets (
-                    buildsetid INTEGER,
-                    name TEXT NOT NULL,
-                    revision TEXT NOT NULL,
-                    timestamp INTEGER,
+        if (self::$objInstance) {
+            return self::$objInstance;
+        }
 
-                    PRIMARY KEY (buildsetid)
-                );
+        self::$objInstance = new PDO(DB_DSN);
+        self::$objInstance->setAttribute(PDO::ATTR_ERRMODE,
+                                         PDO::ERRMODE_EXCEPTION);
 
-                CREATE TABLE IF NOT EXISTS builds (
-                    buildset INTEGER,
-                    buildername TEXT NOT NULL,
-                    output BLOB NOT NULL,
-                    status TEXT NOT NULL,
-                    exitcode INTEGER,
+        $statement = self::$objInstance->query('pragma user_version');
+        if (!$statement) {
+            die("Failed to query user version from the database\n"
+              . print_r(DB::errorInfo(), true));
+        }
 
-                    PRIMARY KEY (buildset, buildername),
-                    FOREIGN KEY (buildset) REFERENCES buildsets(buildsetid)
-                );
+        $userVersion = $statement->fetch();
+        if ($userVersion === false) {
+            die("Failed to fetch user version from the database\n"
+              . print_r(DB::errorInfo(), true));
+        }
+        $version = $userVersion[0];
+        if ($version == 1) {
+            return self::$objInstance;
+        }
+
+        switch ($version) {
+            case 0:
+                self::$objInstance->exec(<<<EOS
+                    CREATE TABLE IF NOT EXISTS buildsets (
+                        buildsetid INTEGER,
+                        name TEXT NOT NULL,
+                        revision TEXT NOT NULL,
+                        timestamp INTEGER,
+
+                        PRIMARY KEY (buildsetid)
+                    );
+
+                    CREATE TABLE IF NOT EXISTS builds (
+                        buildset INTEGER,
+                        buildername TEXT NOT NULL,
+                        output BLOB NOT NULL,
+                        status TEXT NOT NULL,
+                        exitcode INTEGER,
+
+                        PRIMARY KEY (buildset, buildername),
+                        FOREIGN KEY (buildset) REFERENCES buildsets(buildsetid)
+                    );
+
+                    ALTER TABLE builds ADD COLUMN starttime INTEGER DEFAULT 0;
+                    ALTER TABLE builds ADD COLUMN endtime INTEGER DEFAULT 0;
 EOS
 );
-
+                // Fall through.
+            case 1:
+                break;
         }
+
+        self::$objInstance->exec('pragma user_version = 1');
 
         return self::$objInstance;
     }

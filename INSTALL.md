@@ -43,7 +43,7 @@ Run the `install` script to perform the installation:
     install <web-path> <daemon-path>
 
 Start the daemon and it will create database, web-interface will create it too,
-but only if it has corresponding permissions.
+but only if it has necessary permissions.
 
 ### Managing builders ###
 
@@ -82,5 +82,6 @@ hooks (this is for Git, other VCSs might differ).
 
 ### Updates ###
 
-Don't forget to remove database before an update to address possible changes of
-tables.
+Database is upgraded in place automatically, consider backing it up if
+necessary.  It can be upgraded on any access to it, but normally only daemon
+will have write permissions on it.
