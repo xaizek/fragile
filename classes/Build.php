@@ -30,13 +30,15 @@ class Build
      * @param revision Revision of the associated buildset.
      */
     public function __construct($buildset, $buildername, $status, $exitcode,
-                                $revision = null)
+                                $revision = null, $starttime = 0, $endtime = 0)
     {
         $this->buildset = $buildset;
         $this->buildername = $buildername;
         $this->status = $status;
         $this->exitcode = $exitcode;
         $this->revision = $revision;
+        $this->starttime = $starttime;
+        $this->endtime = $endtime;
     }
 
     /**
@@ -49,7 +51,9 @@ class Build
      */
     public static function get($buildset, $buildername)
     {
-        $sql = 'SELECT buildset, buildername, status, exitcode FROM builds '
+        $sql = 'SELECT buildset, buildername, status, exitcode, '
+             . '       starttime, endtime '
+             . 'FROM builds '
              . 'WHERE buildset = ? AND buildername = ?';
         $statement = DB::prepare($sql);
         if (!$statement
@@ -61,7 +65,10 @@ class Build
         return new Build($buildinfo['buildset'],
                          $buildinfo['buildername'],
                          $buildinfo['status'],
-                         $buildinfo['exitcode']);
+                         $buildinfo['exitcode'],
+                         null,
+                         $buildinfo['starttime'],
+                         $buildinfo['endtime']);
     }
 
     /**
@@ -73,8 +80,9 @@ class Build
     public static function create($buildset, $buildername)
     {
         $sql = 'INSERT INTO '
-             . 'builds(buildset, buildername, output, status, exitcode) '
-             . 'VALUES(?, ?, "", "pending", -1)';
+             . 'builds(buildset, buildername, output, status, exitcode, '
+             . '       starttime, endtime) '
+             . 'VALUES(?, ?, "", "pending", -1, 0, 0)';
         $statement = DB::prepare($sql);
         if (!$statement || $statement->execute([$buildset->buildsetid,
                                                 $buildername]) === false) {
@@ -115,11 +123,12 @@ class Build
      */
     public function markAsStarted()
     {
-        $sql = 'UPDATE builds SET status = "running" '
+        $sql = 'UPDATE builds SET status = "running", starttime = ? '
              . 'WHERE buildset = ? AND buildername = ?';
         $statement = DB::prepare($sql);
+        $this->starttime = time();
         if (!$statement ||
-            $statement->execute([$this->buildset,
+            $statement->execute([$this->starttime, $this->buildset,
                                  $this->buildername]) === false) {
             die("Failed to mark build as started\n"
               . print_r(DB::errorInfo(), true));
@@ -141,17 +150,36 @@ class Build
             die("Failed to compress output.");
         }
 
-        $sql = 'UPDATE builds SET status = ?, output = ?, exitcode = ? '
+        $sql = 'UPDATE builds SET status = ?, endtime = ?, output = ?, '
+             . '                  exitcode = ? '
              . 'WHERE buildset = ? AND buildername = ?';
         $statement = DB::prepare($sql);
+        $this->endtime = time();
         if (!$statement ||
-            $statement->execute([$status, $output, $exitcode, $this->buildset,
+            $statement->execute([$status, $this->endtime, $output, $exitcode,
+                                 $this->buildset,
                                  $this->buildername]) === false) {
             die("Failed to set build status to '$status'\n"
               . print_r(DB::errorInfo(), true));
         }
 
         $this->status = $status;
+    }
+
+    /**
+     * @brief Retrieves duration of the build.
+     *
+     * @returns `-1` for unknown duration, and `>= 0` value otherwise.
+     */
+    public function getDuration()
+    {
+        if ($this->endtime == 0 && $this->starttime != 0) {
+            // the build must be in progress now
+            return time() - $this->starttime;
+        }
+        return ($this->endtime == 0 || $this->starttime == 0)
+             ? -1
+             : $this->endtime - $this->starttime;
     }
 
     /**
@@ -178,6 +206,16 @@ class Build
      * @brief Revision string, which might be @c null (depends on construction).
      */
     public $revision;
+
+    /**
+     * @brief UNIX timestamp of start of processing.
+     */
+    private $starttime;
+
+    /**
+     * @brief UNIX timestamp of end of processing.
+     */
+    private $endtime;
 }
 
 ?>
