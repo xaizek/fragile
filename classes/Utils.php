@@ -43,6 +43,34 @@ class Utils
         return rmdir($dir);
     }
 
+    /**
+     * @brief Formats time duration as a string.
+     *
+     * @param duration Duration in seconds.
+     *
+     * @returns "unknown" for negative @p duration, "< 1s" for zero @p duration
+     *          and "[Xm]Ys" for positive @p duration.
+     */
+    public static function formatDuration($duration)
+    {
+        if ($duration < 0) {
+            return 'unknown';
+        }
+        if ($duration == 0) {
+            return '< 1s';
+        }
+
+        $minutes = floor($duration/60);
+        $seconds = $duration%60;
+
+        $text = '';
+        if ($minutes >= 1) {
+            $text .= $minutes . 'm';
+        }
+        $text .= $seconds . 's';
+
+        return $text;
+    }
 }
 
 ?>

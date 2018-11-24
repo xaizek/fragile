@@ -15,6 +15,7 @@
 
 require_once __DIR__ . '/classes/Builds.php';
 require_once __DIR__ . '/classes/Buildsets.php';
+require_once __DIR__ . '/classes/Utils.php';
 require_once __DIR__ . '/config.php';
 
 require_once __DIR__ . '/header.php';
@@ -62,8 +63,27 @@ function printBuildTable($buildsets, $builders)
     print '<table class="dashboard"><tr><td></td>' . "\n";
     foreach ($buildsets as $buildset) {
         $ts = gmdate('Y-m-d H:i:s', $buildset->timestamp) . ' UTC';
-        print "<td class='revision' title='$ts'>";
-        print '#' . htmlentities($buildset->buildsetid) . ': ';
+        $buildsetid = $buildset->buildsetid;
+
+        // compute duration of the buildset
+        $buildsetDuration = -1;
+        foreach ($builders as $buildername => $builderinfo) {
+            if (array_key_exists($buildsetid, $builderinfo)) {
+                $duration = $builderinfo[$buildsetid]->getDuration();
+                if ($duration >= 0) {
+                    if ($buildsetDuration < 0) {
+                        $buildsetDuration = 0;
+                    }
+                    $buildsetDuration += $duration;
+                }
+            }
+        }
+
+        $duration = Utils::formatDuration($buildsetDuration);
+        $tooltip = "Scheduled at: $ts\nTotal duration: ${duration}";
+
+        print "<td class='revision' title='$tooltip'>";
+        print '#' . htmlentities($buildsetid) . ': ';
         print htmlentities($buildset->revision);
         print "<br/><span class='name'>"
             . htmlentities($buildset->name)
