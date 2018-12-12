@@ -3,6 +3,16 @@
 # chkconfig: 345 20 80
 # description: fragile CI daemon
 
+### BEGIN INIT INFO
+# Provides:          fragile
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: fragile CI daemon.
+# Description:       fragile CI daemon.
+### END INIT INFO
+
 USER=fragile
 DAEMON="php /var/fragile/daemon.php"
 DAEMONOPTS=
