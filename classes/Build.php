@@ -134,7 +134,7 @@ class Build
               . print_r(DB::errorInfo(), true));
         }
 
-        $this->status = $status;
+        $this->status = 'running';
     }
 
     /**
